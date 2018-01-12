@@ -1,0 +1,120 @@
+<#include "/macro.include"/>
+<#assign className = table.className>   
+<#assign classNameFirstLower = table.classNameFirstLower>   
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<#macro mapperEl value type>${r"#{"}${value},jdbcType=${type}}</#macro>
+<mapper namespace="${basepackage}.dao.${className}Dao">
+
+	<resultMap id="${className}ResultMap" type="${className}">
+        <#list table.columns as column>
+        <result property="${column.columnNameLower}" column="${column.sqlName}" jdbcType="${column.jdbcSqlTypeName}"/>
+		</#list>
+	</resultMap>
+	
+	<sql id="${className}_Column_List">
+	    <![CDATA[
+		<#list table.columns as column>
+        	${column.sqlName}<#if column_has_next>,</#if>
+        </#list>
+	    ]]>
+	</sql>
+
+	<!-- useGeneratedKeys="true" keyProperty="xxx" for sqlserver and mysql -->
+	<insert id="insert" useGeneratedKeys="true" keyProperty="${table.idColumn.columnNameFirstLower}" parameterType="${className}">  
+        INSERT INTO ${table.sqlName} 
+		<trim prefix="(" suffix=")" suffixOverrides="," >  	
+        <#list table.columns as column>
+            <if test="${column.columnNameFirstLower} != null" >
+        		${column.sqlName} <#if column_has_next>,</#if>
+        	</if>       	 
+        </#list>
+    	</trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+        <#list table.columns as column>
+        	<if test="${column.columnNameFirstLower} != null" >
+        		<@mapperEl column.columnNameFirstLower column.jdbcSqlTypeName/> <#if column_has_next>,</#if>
+        	</if>
+         </#list>        
+   		 </trim>
+		<!--	
+			oracle: order="BEFORE" SELECT sequenceName.nextval AS ID FROM DUAL 
+			DB2: order="BEFORE"" values nextval for sequenceName
+		<selectKey resultType="java.lang.Long" order="BEFORE" keyProperty="userId">
+			SELECT sequenceName.nextval AS ID FROM DUAL 
+        </selectKey>
+		-->
+	</insert>
+    
+	<update id="update" parameterType="${className}">
+        UPDATE ${table.sqlName} 
+		<set >     
+	        <#list table.notPkColumns as column>
+	        <if test="${column.columnNameFirstLower} != null" >
+	       		${column.sqlName} = <@mapperEl column.columnNameFirstLower column.jdbcSqlTypeName/> <#if column_has_next>,</#if>
+	        </if>
+	        </#list>	         
+    	</set>
+        WHERE 
+        	<#list table.compositeIdColumns as column>
+	        ${column.sqlName} = <@mapperEl column.columnNameLower column.jdbcSqlTypeName/> <#if column_has_next>,</#if>
+	        </#list>	        
+   
+	</update>
+	<delete id="delete" parameterType="${table.idColumn.javaType}">
+        DELETE FROM ${table.sqlName} WHERE
+        <#list table.compositeIdColumns as column>
+        ${column.sqlName} = <@mapperEl column.columnNameLower column.jdbcSqlTypeName/> <#if column_has_next>,</#if>
+		</#list>
+    </delete>   
+    <select id="get" resultMap="${className}ResultMap" parameterType="${table.idColumn.javaType}">
+		SELECT <include refid="${className}_Column_List" />
+		    FROM ${table.sqlName} 
+	        WHERE 
+				<#list table.compositeIdColumns as column>
+		        ${column.sqlName} = <@mapperEl column.columnNameLower column.jdbcSqlTypeName/> <#if column_has_next>,</#if>
+		        </#list> 
+	</select>		
+	<sql id="searchWhere">
+		<where>	      				
+	       <#list table.columns as column>
+	       <#if column.isDateTimeColumn>
+	       <if test="${column.columnNameFirstLower}Begin!=null">
+				AND ${column.sqlName} >= <@mapperEl column.columnNameFirstLower+"Begin" column.jdbcSqlTypeName/>
+		   </if>
+		   <if test="${column.columnNameFirstLower}End!=null">
+				AND ${column.sqlName} &lt;= <@mapperEl column.columnNameFirstLower+"End" column.jdbcSqlTypeName/>
+		   </if>
+	       <#else>
+	       <if test="${column.columnNameFirstLower}!=null">
+				AND ${column.sqlName} = <@mapperEl column.columnNameFirstLower column.jdbcSqlTypeName/>
+			</if>
+	       </#if>
+	       </#list>			
+		</where>
+	</sql>
+    <select id="search" resultMap="${className}ResultMap">
+    	SELECT <include refid="${className}_Column_List" />
+	    FROM ${table.sqlName} 
+		<include refid="searchWhere"/>
+    </select>	
+	
+	<select id="list" resultMap="${className}ResultMap">
+    	SELECT <include refid="${className}_Column_List" />
+	    FROM ${table.sqlName} 
+		<include refid="searchWhere"/>
+    </select>	
+    
+    <#list table.columns as column>
+    <#if column.unique && !column.pk>
+    <select id="getBy${column.columnName}" resultMap="${className}ResultMap" parameterType="${column.javaType}">
+	    SELECT <include refid="${className}_Column_List"/>
+	    <![CDATA[
+	        FROM ${table.sqlName} where ${column.sqlName} = <@mapperEl column.columnNameLower column.jdbcSqlTypeName/>
+	    ]]>
+    </select>
+    </#if>
+	</#list>
+	
+</mapper>
+

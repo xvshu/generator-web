@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xmlns="http://www.springframework.org/schema/beans"
+	   xmlns:context="http://www.springframework.org/schema/context"
+	   xmlns:tx="http://www.springframework.org/schema/tx" xmlns:aop="http://www.springframework.org/schema/aop"
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans
+     http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+     http://www.springframework.org/schema/context
+     http://www.springframework.org/schema/context/spring-context-4.0.xsd
+     http://www.springframework.org/schema/tx
+     http://www.springframework.org/schema/tx/spring-tx-4.0.xsd
+     http://www.springframework.org/schema/aop
+     http://www.springframework.org/schema/aop/spring-aop.xsd">
+
+	<!-- 服务层[spring scan] start -->
+	<context:component-scan base-package="com.eloancn.architect" >
+		<context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller" />
+		<context:exclude-filter type="annotation" expression="org.springframework.web.bind.annotation.ControllerAdvice" />
+	</context:component-scan>
+	<context:component-scan base-package="com.eloancn.common.cache">
+		<context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller" />
+		<context:exclude-filter type="annotation" expression="org.springframework.web.bind.annotation.ControllerAdvice" />
+	</context:component-scan>
+	<!-- 服务层[spring scan] end -->
+
+	<!-- 统一配置层[disconf] start -->
+	<bean class="com.baidu.disconf.client.DisconfMgrBean" destroy-method="destroy">
+		<property name="scanPackage" value="com.eloancn.architect" />
+	</bean>
+	<bean class="com.baidu.disconf.client.DisconfMgrBeanSecond" init-method="init" destroy-method="destroy" />
+	<!-- 使用托管方式的disconf配置(无代码侵入, 配置更改不会自动reload) -->
+	<bean id="configproperties" class="com.baidu.disconf.client.addons.properties.ReloadablePropertiesFactoryBean">
+		<property name="locations">
+			<list>
+				<value>classpath:properties/application.properties</value>
+				<value>classpath:properties/const.properties</value>
+			</list>
+		</property>
+	</bean>
+	<bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="ignoreResourceNotFound" value="true" />
+		<property name="ignoreUnresolvablePlaceholders" value="true" />
+		<property name="propertiesArray">
+			<list>
+				<ref bean="configproperties" />
+			</list>
+		</property>
+	</bean>
+	<!-- 统一配置层[disconf] start -->
+
+	<!-- DB配置层[dataSource] start -->
+	<bean id = "dataSource" class = "com.alibaba.druid.pool.DruidDataSource" destroy-method = "close" >
+		<!-- 数据库基本信息配置 -->
+		<property name = "url" value = "${mysql.jdbc.url}" />
+		<property name = "username" value = "${mysql.jdbc.username}" />
+		<property name = "password" value = "${mysql.jdbc.password}" />
+		<property name = "driverClassName" value = "${mysql.jdbc.driver.class}" />
+		<property name = "filters" value = "${mysql.jdbc.filters}" />
+		<!-- 最大并发连接数 -->
+		<property name = "maxActive" value = "${mysql.jdbc.maxPoolSize}" />
+		<!-- 初始化连接数量 -->
+		<property name = "initialSize" value = "${mysql.jdbc.initialPoolSize}" />
+		<!-- 配置获取连接等待超时的时间 -->
+		<property name = "maxWait" value = "${mysql.jdbc.maxWait}" />
+		<!-- 最小空闲连接数 -->
+		<property name = "minIdle" value = "${mysql.jdbc.minPoolSize}" />
+		<!-- 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒 -->
+		<property name = "timeBetweenEvictionRunsMillis" value ="${mysql.jdbc.timeBetweenEvictionRunsMillis}" />
+		<!-- 配置一个连接在池中最小生存的时间，单位是毫秒 -->
+		<property name = "minEvictableIdleTimeMillis" value ="${mysql.jdbc.maxIdleTime}" />
+		<property name = "validationQuery" value = "select now()" />
+		<property name = "testWhileIdle" value = "${mysql.jdbc.testWhileIdle}" />
+		<property name = "testOnBorrow" value = "${mysql.jdbc.testOnBorrow}" />
+		<property name = "testOnReturn" value = "${mysql.jdbc.testOnReturn}" />
+	</bean >
+
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<!-- <property name="configLocation" value="classpath:mybatis-config.xml"></property> -->
+		<property name="typeAliasesPackage" value="com.eloancn.architect.model,com.eloancn.common.model"></property>
+		<property name="mapperLocations">
+			<list>
+				<value>classpath:mapper/*Mapper*.xml</value>
+				<value>classpath*:/com/eloancn/common/mapper/*Mapper.xml</value>
+			</list>
+		</property>
+		<property name="plugins">
+			<list>
+				<bean class="com.eloancn.framework.orm.mybatis.paginator.OffsetLimitInterceptor">
+					<property name="dialectClass" value="com.eloancn.framework.orm.mybatis.paginator.dialect.MySQLDialect"></property>
+					<property name="asyncTotalCount" value="true"></property>
+					<property name="poolMaxSize" value="10"></property>
+				</bean>
+				<bean class="com.eloancn.framework.orm.mybatis.EncryptionAndDecryptionInterceptor">
+					<property name="encryptor">
+						<bean class="com.eloancn.framework.cipher.TextDESEncryptor">
+							<property name="password" value="eloan_yzld"></property>
+						</bean>
+					</property>
+				</bean>
+			</list>
+		</property>
+	</bean>
+	<!-- 扫描basePackage下所有以@MyBatisRepository标识的 接口 -->
+	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		<property name="basePackage" value="com.eloancn.architect.dao,com.eloancn.common.dao"/>
+		<property name="annotationClass" value="com.eloancn.framework.orm.mybatis.MyBatisRepository" />
+	</bean>
+
+	<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+	<tx:annotation-driven transaction-manager="transactionManager" proxy-target-class="true" />
+	<!-- DB配置层[dataSource] end -->
+
+	<!-- Logger start -->
+	<bean id="methodLogger" class="com.eloancn.framework.log.MethodLogger" />
+	<!-- Logger end -->
+
+	<!-- 监控层[cat] start -->
+	<bean id="packageProxyFactoryBean" class="com.eloancn.framework.ump.annotation.PackageProxyFactoryBean">
+		<property name="packages"><!--方法拦截的包路径-->
+			<list>
+				<!-- 直接使用spring的scan即可 -->
+				<value>com.eloancn.architect</value>
+			</list>
+		</property>
+		<!-- 如果你的代码没有使用接口，要加上这个配置 -->
+		<property name="proxyTargetClass" value="true"/>
+	</bean>
+	<!-- 监控层[cat] end -->
+
+	<aop:aspectj-autoproxy proxy-target-class="true" />
+
+	<import resource="classpath:spring/applicationContext-redis.xml"/>
+	<import resource="classpath:spring/applicationContext-codis.xml"/>
+
+
+	<!-- 定义业务相关的key前缀-->
+	<bean id="redisNameSpace" class="com.eloancn.framework.cache.RedisNameSpace">
+		<constructor-arg>
+			<value>redis_demo:</value>
+		</constructor-arg>
+	</bean>
+
+
+
+
+
+</beans>

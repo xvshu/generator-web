@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="GBK"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+	<!-- base package -->
+	<entry key="basepackage">${basepackage}</entry>
+
+	<!-- project name -->
+	<entry key="project_name">${project_name}</entry>
+
+	<!-- tableRemovePrefixes,eg: t_,v_ -->
+	<entry key="tableRemovePrefixes">${tableRemovePrefixes}</entry>
+
+	<!-- Mysql -->
+	<entry key="jdbc_url">${jdbc_url}</entry>
+	<entry key="jdbc_driver">${jdbc_driver}</entry>
+	<entry key="jdbc_username">${jdbc_username}</entry>
+	<entry key="jdbc_password">${jdbc_password}</entry>
+</properties>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="GBK"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+    <!-- base package -->
+    <entry key="basepackage">com.el.organ</entry>
+
+    <!-- project name -->
+    <entry key="project_name">organ</entry>
+
+    <!-- tableRemovePrefixes,eg: t_,v_ -->
+    <entry key="tableRemovePrefixes">o_</entry>
+
+    <!-- Mysql -->
+    <entry key="jdbc_url">jdbc:mysql://192.168.2.150:3316/eloancn_organization?useUnicode=true&amp;characterEncoding=UTF-8</entry>
+    <entry key="jdbc_driver">com.mysql.jdbc.Driver</entry>
+    <entry key="jdbc_username">developer</entry>
+    <entry key="jdbc_password">developer_select</entry>
+</properties>

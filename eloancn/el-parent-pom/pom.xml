@@ -1,0 +1,404 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>com.el.parent</groupId>
+	<artifactId>el-pom</artifactId>
+	<version>1.0.1</version>
+	<packaging>pom</packaging>
+	<name>el-parent-pom</name>
+	<description>base parent pom</description>
+	<properties>
+		<!-- Common libs -->
+		<spring.bom.version>4.3.5.RELEASE</spring.bom.version>
+		<javassist_version>3.15.0-GA</javassist_version>
+		<netty_version>3.7.0.Final</netty_version>
+		<shiro.version>1.2.1</shiro.version>
+		<commons-lang3.version>3.6</commons-lang3.version>
+		<commons-io.version>2.4</commons-io.version>
+		<guava.version>15.0</guava.version>
+		<slf4j.version>1.7.25</slf4j.version>
+		<logback.version>1.2.3</logback.version>
+		<mybatis.version>3.3.0</mybatis.version>
+		<jackson.version>2.7.4</jackson.version>
+		<dozer.version>5.4.0</dozer.version>
+		<mysql.version>5.1.37</mysql.version>
+		<alibaba.druid.version>1.0.12</alibaba.druid.version>
+		<eloancn.framework.version>1.0-SNAPSHOT</eloancn.framework.version>
+		<commons-configuration>1.10</commons-configuration>
+	</properties>
+	<dependencyManagement>
+		<dependencies>
+			<!-- Common libs -->
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-framework-bom</artifactId>
+				<version>${spring.bom.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-jdbc</artifactId>
+				<version>${spring.bom.version}</version>
+			</dependency>
+			<!-- mybatis -->
+			<dependency>
+				<groupId>org.mybatis</groupId>
+				<artifactId>mybatis</artifactId>
+				<version>${mybatis.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.mybatis</groupId>
+				<artifactId>mybatis-spring</artifactId>
+				<version>1.2.0</version>
+			</dependency>
+			<!-- spring mvc -->
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-web</artifactId>
+				<version>${spring.bom.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-webmvc</artifactId>
+				<version>${spring.bom.version}</version>
+			</dependency>
+            <dependency>
+                <groupId>org.springframework.data</groupId>
+                <artifactId>spring-data-redis</artifactId>
+                <version>1.8.8.RELEASE</version>
+            </dependency>
+            <dependency>
+                <groupId>redis.clients</groupId>
+                <artifactId>jedis</artifactId>
+                <version>2.9.0</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.amqp</groupId>
+                <artifactId>spring-rabbit</artifactId>
+                <version>1.7.4.RELEASE</version>
+            </dependency>
+			<!-- AOP begin -->
+			<dependency>
+				<groupId>org.aspectj</groupId>
+				<artifactId>aspectjrt</artifactId>
+				<version>1.7.3</version>
+			</dependency>
+			<dependency>
+				<groupId>org.aspectj</groupId>
+				<artifactId>aspectjweaver</artifactId>
+				<version>1.7.3</version>
+				<scope>runtime</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.javassist</groupId>
+				<artifactId>javassist</artifactId>
+				<version>${javassist_version}</version>
+			</dependency>
+			<!-- SECURITY begin -->
+			<dependency>
+				<groupId>org.apache.shiro</groupId>
+				<artifactId>shiro-core</artifactId>
+				<version>${shiro.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.shiro</groupId>
+				<artifactId>shiro-spring</artifactId>
+				<version>${shiro.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.shiro</groupId>
+				<artifactId>shiro-web</artifactId>
+				<version>${shiro.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.shiro</groupId>
+				<artifactId>shiro-cas</artifactId>
+				<version>${shiro.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.jasig.cas.client</groupId>
+				<artifactId>cas-client-core</artifactId>
+				<version>3.4.2</version>
+			</dependency>
+			<!-- SECURITY end -->
+			<dependency>
+				<groupId>javax.servlet</groupId>
+				<artifactId>javax.servlet-api</artifactId>
+				<version>3.1.0</version>
+			</dependency>
+
+			<!-- commons start -->
+			<dependency>
+				<groupId>commons-codec</groupId>
+				<artifactId>commons-codec</artifactId>
+				<version>1.10</version>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.commons</groupId>
+				<artifactId>commons-lang3</artifactId>
+				<version>${commons-lang3.version}</version>
+			</dependency>
+			<!-- LOGGING begin -->
+			<!-- slf4j -->
+			<dependency>
+				<groupId>org.slf4j</groupId>
+				<artifactId>slf4j-api</artifactId>
+				<version>${slf4j.version}</version>
+			</dependency>
+			<!-- logback -->
+			<dependency>
+				<groupId>ch.qos.logback</groupId>
+				<artifactId>logback-classic</artifactId>
+				<version>${logback.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.slf4j</groupId>
+				<artifactId>log4j-over-slf4j</artifactId>
+				<version>${slf4j.version}</version>
+				<scope>runtime</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.slf4j</groupId>
+				<artifactId>jcl-over-slf4j</artifactId>
+				<version>${slf4j.version}</version>
+				<scope>runtime</scope>
+			</dependency>
+
+			<!-- 代码直接调用java.util.logging会被桥接到slf4j -->
+			<dependency>
+				<groupId>org.slf4j</groupId>
+				<artifactId>jul-to-slf4j</artifactId>
+				<version>${slf4j.version}</version>
+				<scope>runtime</scope>
+			</dependency>
+			<!-- log4jdbc -->
+			<dependency>
+				<groupId>org.bgee.log4jdbc-log4j2</groupId>
+				<artifactId>log4jdbc-log4j2-jdbc4</artifactId>
+				<version>1.15</version>
+				<scope>runtime</scope>
+			</dependency>
+			<!-- LOGGING end -->
+			<dependency>
+				<groupId>org.bouncycastle</groupId>
+				<artifactId>bcprov-jdk15on</artifactId>
+				<version>1.58</version>
+			</dependency>
+			<dependency>
+				<groupId>org.jasypt</groupId>
+				<artifactId>jasypt</artifactId>
+				<version>1.9.2</version>
+			</dependency>
+			<dependency>
+				<groupId>org.jasypt</groupId>
+				<artifactId>jasypt-spring3</artifactId>
+				<version>1.9.2</version>
+			</dependency>
+			<!-- JSON begin -->
+			<dependency>
+				<groupId>com.fasterxml.jackson.core</groupId>
+				<artifactId>jackson-annotations</artifactId>
+				<version>${jackson.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.fasterxml.jackson.core</groupId>
+				<artifactId>jackson-core</artifactId>
+				<version>${jackson.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.fasterxml.jackson.core</groupId>
+				<artifactId>jackson-databind</artifactId>
+				<version>${jackson.version}</version>
+			</dependency>
+			<!-- JSON end -->
+			<dependency>
+				<groupId>net.sf.dozer</groupId>
+				<artifactId>dozer</artifactId>
+				<version>${dozer.version}</version>
+				<exclusions>
+					<exclusion>
+						<groupId>org.slf4j</groupId>
+						<artifactId>slf4j-log4j12</artifactId>
+					</exclusion>
+				</exclusions>
+			</dependency>
+
+			<!-- new add -->
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-aop</artifactId>
+				<version>${spring.bom.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-aspects</artifactId>
+				<version>${spring.bom.version}</version>
+			</dependency>
+
+			<!-- test-begin -->
+			<dependency>
+				<groupId>junit</groupId>
+				<artifactId>junit</artifactId>
+				<version>4.12</version>
+			</dependency>
+			<!-- test-end -->
+
+			<!-- dubbo-begin -->
+			<dependency>
+				<groupId>com.alibaba</groupId>
+				<artifactId>dubbo</artifactId>
+				<version>2.8.4</version>
+				<exclusions>
+					<exclusion>
+						<artifactId>curator-client</artifactId>
+						<groupId>org.apache.curator</groupId>
+					</exclusion>
+					<exclusion>
+						<artifactId>curator-framework</artifactId>
+						<groupId>org.apache.curator</groupId>
+					</exclusion>
+				</exclusions>
+			</dependency>
+			<!-- dubbo-end -->
+
+			<!-- cat-client -->
+			<dependency>
+				<groupId>com.dianping.cat</groupId>
+				<artifactId>cat-client</artifactId>
+				<version>1.3.6-SNAPSHOT</version>
+			</dependency>
+
+			<!-- disconf -->
+			<dependency>
+				<groupId>com.baidu.disconf</groupId>
+				<artifactId>disconf-core</artifactId>
+				<version> 2.6.30</version>
+			</dependency>
+			<dependency>
+				<groupId>com.baidu.disconf</groupId>
+				<artifactId>disconf-client</artifactId>
+				<version> 2.6.30</version>
+			</dependency>
+
+			<dependency>
+				<groupId>org.jboss.resteasy</groupId>
+				<artifactId>resteasy-jaxrs</artifactId>
+				<version>3.0.7.Final</version>
+			</dependency>
+
+			<dependency>
+				<groupId>com.eloancn.common</groupId>
+				<artifactId>common-api</artifactId>
+				<version>1.0-SNAPSHOT</version>
+			</dependency>
+			<dependency>
+				<groupId>com.eloancn</groupId>
+				<artifactId>common</artifactId>
+				<version>1.1.1</version>
+				<exclusions>
+					<exclusion>
+						<groupId>com.eloancn.common</groupId>
+						<artifactId>common</artifactId>
+					</exclusion>
+				</exclusions>
+			</dependency>
+			<dependency>
+				<groupId>com.eloancn.common</groupId>
+				<artifactId>common</artifactId>
+				<version>1.1-SNAPSHOT</version>
+			</dependency>
+
+			<!--mysql-begin-->
+			<dependency>
+				<groupId>mysql</groupId>
+				<artifactId>mysql-connector-java</artifactId>
+				<version>${mysql.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.alibaba</groupId>
+				<artifactId>druid</artifactId>
+				<version>${alibaba.druid.version}</version>
+			</dependency>
+			<!--mysql-end-->
+
+			<!--eloancn-framework-begin-->
+			<dependency>
+				<groupId>com.eloancn.framework</groupId>
+				<artifactId>el-cas</artifactId>
+				<version>${eloancn.framework.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.eloancn.framework</groupId>
+				<artifactId>el-queue</artifactId>
+				<version>${eloancn.framework.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.eloancn.framework</groupId>
+				<artifactId>el-orm</artifactId>
+				<version>${eloancn.framework.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.eloancn.framework</groupId>
+				<artifactId>el</artifactId>
+				<version>${eloancn.framework.version}</version>
+			</dependency>
+			<!--eloancn-framework-end-->
+
+			<!-- PropertiesUtil -->
+			<dependency>
+				<groupId>commons-configuration</groupId>
+				<artifactId>commons-configuration</artifactId>
+				<version>${commons-configuration}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>org.projectlombok</groupId>
+				<artifactId>lombok</artifactId>
+				<version>1.16.10</version>
+			</dependency>
+
+			<dependency>
+				<groupId>org.apache.zookeeper</groupId>
+				<artifactId>zookeeper</artifactId>
+				<version>3.4.5</version>
+				<exclusions>
+					<exclusion>
+						<artifactId>jline</artifactId>
+						<groupId>jline</groupId>
+					</exclusion>
+					<exclusion>
+						<artifactId>log4j</artifactId>
+						<groupId>log4j</groupId>
+					</exclusion>
+					<exclusion>
+						<artifactId>netty</artifactId>
+						<groupId>org.jboss.netty</groupId>
+					</exclusion>
+					<exclusion>
+						<artifactId>slf4j-log4j12</artifactId>
+						<groupId>org.slf4j</groupId>
+					</exclusion>
+				</exclusions>
+			</dependency>
+
+		</dependencies>
+	</dependencyManagement>
+
+
+	<!--定义snapshots库和releases库的nexus地址-->
+	<distributionManagement>
+		<repository>
+			<id>releases</id>
+			<url>
+				http://192.168.3.232:8081/nexus/content/repositories/releases/
+			</url>
+		</repository>
+		<snapshotRepository>
+			<id>snapshots</id>
+			<url>
+				http://192.168.3.232:8081/nexus/content/repositories/snapshots/
+			</url>
+		</snapshotRepository>
+	</distributionManagement>
+</project>

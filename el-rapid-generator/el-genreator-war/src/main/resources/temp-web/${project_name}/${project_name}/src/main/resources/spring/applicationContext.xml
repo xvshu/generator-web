@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xmlns="http://www.springframework.org/schema/beans"
+	   xmlns:context="http://www.springframework.org/schema/context"
+	   xmlns:tx="http://www.springframework.org/schema/tx" xmlns:aop="http://www.springframework.org/schema/aop"
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans
+     http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+     http://www.springframework.org/schema/context
+     http://www.springframework.org/schema/context/spring-context-4.0.xsd
+     http://www.springframework.org/schema/tx
+     http://www.springframework.org/schema/tx/spring-tx-4.0.xsd
+     http://www.springframework.org/schema/aop
+     http://www.springframework.org/schema/aop/spring-aop.xsd">
+
+	<!-- baidu disconf config start -->
+	<bean class="com.baidu.disconf.client.DisconfMgrBean" destroy-method="destroy">
+		<property name="scanPackage" value="${basepackage}" />
+	</bean>
+	<bean class="com.baidu.disconf.client.DisconfMgrBeanSecond" init-method="init" destroy-method="destroy" />
+	<!-- 使用托管方式的disconf配置(无代码侵入, 配置更改不会自动reload) -->
+	<bean id="configproperties" class="com.baidu.disconf.client.addons.properties.ReloadablePropertiesFactoryBean">
+		<property name="locations">
+			<list>
+				<value>classpath:properties/application.properties</value>
+			</list>
+		</property>
+	</bean>
+	<bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="ignoreResourceNotFound" value="true" />
+		<property name="ignoreUnresolvablePlaceholders" value="true" />
+		<property name="propertiesArray">
+			<list>
+				<ref bean="configproperties" />
+			</list>
+		</property>
+	</bean>
+	<!-- baidu disconf config end -->
+
+	<!-- alibaba dataSource druid pool config start -->
+	<bean id = "dataSource" class = "com.alibaba.druid.pool.DruidDataSource" destroy-method = "close" >
+		<!-- 数据库基本信息配置 -->
+		<property name = "url" value = "${r"${mysql.jdbc.url}"}" />
+		<property name = "username" value = "${r"${mysql.jdbc.username}"}" />
+		<property name = "password" value = "${r"${mysql.jdbc.password}"}" />
+		<property name = "driverClassName" value = "${r"${mysql.jdbc.driver.class}"}" />
+		<property name = "filters" value = "${r"${mysql.jdbc.filters}"}" />
+		<!-- 最大并发连接数 -->
+		<property name = "maxActive" value = "${r"${mysql.jdbc.maxPoolSize}"}" />
+		<!-- 初始化连接数量 -->
+		<property name = "initialSize" value = "${r"${mysql.jdbc.initialPoolSize}"}" />
+		<!-- 配置获取连接等待超时的时间 -->
+		<property name = "maxWait" value = "${r"${mysql.jdbc.maxWait}"}" />
+		<!-- 最小空闲连接数 -->
+		<property name = "minIdle" value = "${r"${mysql.jdbc.minPoolSize}"}" />
+		<!-- 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒 -->
+		<property name = "timeBetweenEvictionRunsMillis" value ="${r"${mysql.jdbc.timeBetweenEvictionRunsMillis}"}" />
+		<!-- 配置一个连接在池中最小生存的时间，单位是毫秒 -->
+		<property name = "minEvictableIdleTimeMillis" value ="${r"${mysql.jdbc.maxIdleTime}"}" />
+		<property name = "validationQuery" value = "select now()" />
+		<property name = "testWhileIdle" value = "${r"${mysql.jdbc.testWhileIdle}"}" />
+		<property name = "testOnBorrow" value = "${r"${mysql.jdbc.testOnBorrow}"}" />
+		<property name = "testOnReturn" value = "${r"${mysql.jdbc.testOnReturn}"}" />
+	</bean >
+	<!-- alibaba dataSource druid pool config end -->
+
+	<!-- spring beans autowired scan config start -->
+	<context:component-scan base-package="${basepackage}" />
+	<context:component-scan base-package="com.eloancn.common.cache">
+		<context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller" />
+		<context:exclude-filter type="annotation" expression="org.springframework.web.bind.annotation.ControllerAdvice" />
+	</context:component-scan>
+	<!-- spring beans autowired scan config end -->
+
+	<!-- mybatis mapper config start -->
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<!-- <property name="configLocation" value="classpath:mybatis-config.xml"></property> -->
+		<property name="typeAliasesPackage" value="${basepackage}.model,com.eloancn.common.model"></property>
+		<property name="mapperLocations">
+			<list>
+				<value>classpath:mapper/*Mapper*.xml</value>
+				<value>classpath*:/com/eloancn/common/mapper/*Mapper.xml</value>
+			</list>
+		</property>
+		<property name="plugins">
+			<list>
+				<bean class="com.eloancn.framework.orm.mybatis.paginator.OffsetLimitInterceptor">
+					<property name="dialectClass" value="com.eloancn.framework.orm.mybatis.paginator.dialect.MySQLDialect"></property>
+					<property name="asyncTotalCount" value="true"></property>
+					<property name="poolMaxSize" value="10"></property>
+				</bean>
+				<bean class="com.eloancn.framework.orm.mybatis.EncryptionAndDecryptionInterceptor">
+					<property name="encryptor">
+						<bean class="com.eloancn.framework.cipher.TextDESEncryptor">
+							<property name="password" value="eloan_yzld"></property>
+						</bean>
+					</property>
+				</bean>
+			</list>
+		</property>
+	</bean>
+	<!-- 扫描basePackage下所有以@MyBatisRepository标识的 接口 -->
+	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		<property name="basePackage" value="${basepackage}.dao,com.eloancn.common.dao"/>
+		<property name="annotationClass" value="com.eloancn.framework.orm.mybatis.MyBatisRepository" />
+	</bean>
+	<!-- mybatis mapper config end -->
+
+	<!-- datasource transaction config start -->
+	<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+	<tx:annotation-driven transaction-manager="transactionManager" proxy-target-class="true" />
+	<!-- datasource transaction config end -->
+
+	<!-- dianping cat aop config start -->
+	<bean id="packageProxyFactoryBean" class="com.eloancn.framework.ump.annotation.PackageProxyFactoryBean">
+		<property name="packages"><!--方法拦截的包路径-->
+			<list>
+				<!-- 直接使用spring的scan即可 -->
+				<value>${basepackage}</value>
+			</list>
+		</property>
+		<!-- 如果你的代码没有使用接口，要加上这个配置 -->
+		<property name="proxyTargetClass" value="true"/>
+	</bean>
+	<!-- dianping cat aop config end -->
+
+</beans>

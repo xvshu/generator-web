@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:rabbit="http://www.springframework.org/schema/rabbit"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/rabbit
+       http://www.springframework.org/schema/rabbit/spring-rabbit-1.3.xsd">
+
+    <!-- factory -->
+    <rabbit:connection-factory id="connectionFactoryMsg"
+                               host="${r"${rabbit.host}"}"
+                               username="${r"${rabbit.username}"}"
+                               password="${r"${rabbit.password}"}"
+                               port="${r"${rabbit.port}"}"
+                               virtual-host="/"/>
+
+    <!-- mqhelper，记录消息log -->
+    <bean id="defaultMessageHelper" class="com.eloancn.framework.queue.JdbcMessageHelper">
+        <constructor-arg ref="dataSource"></constructor-arg>
+        <property name="selectIsExistSql" value="select count(1) from el_mq_log where message_id=?"></property>
+        <property name="logInsertSql" value="insert into el_mq_log(message_id,exchange,routingKey,error,message_body) values(?,?,?,?,?) "></property>
+        <property name="logInsertSqlParsName">
+            <list>
+                <value>messageId</value>
+                <value>exchange</value>
+                <value>routingKey</value>
+                <value>error</value>
+                <value>body</value>
+            </list>
+        </property>
+    </bean>
+
+    <!-- JsonMessage 消息格式json -->
+    <bean id="jsonMessageConverter" class="org.springframework.amqp.support.converter.Jackson2JsonMessageConverter" />
+
+    <!-- 消息的ListenerBean -->
+    <!--<bean id="rabbitMQListener" class="com.eloancn.architect.demo.queue.RabbitMQListener"/>-->
+
+    <!-- 监听中台发息数据验证结果 -->
+    <!--<bean id="resultRabbitMQListener" class="com.eloancn.framework.queue.AmqServiceMessageListener">-->
+        <!--<constructor-arg ref="rabbitMQListener"></constructor-arg>-->
+        <!--<property name="defaultListenerMethod" value="listener"></property>-->
+        <!--<property name="messageConverter" ref="jsonMessageConverter"></property>-->
+        <!--<property name="messageHelper" ref="defaultMessageHelper"></property>-->
+        <!--<property name="redisTemplate" ref="codisTemplate"></property>-->
+    <!--</bean>-->
+
+    <!--<rabbit:listener-container connection-factory="connectionFactoryMsg" message-converter="jsonMessageConverter" max-concurrency="20">-->
+        <!--<rabbit:listener ref="resultRabbitMQListener" queue-names="test_xf"/>-->
+    <!--</rabbit:listener-container>-->
+
+
+</beans>

@@ -1,0 +1,11 @@
+DELETE FROM `el_name` WHERE id = 1;
+DELETE FROM `el_name` WHERE id = 2;
+DELETE FROM `el_name` WHERE id = 3;
+DELETE FROM `el_name` WHERE id = 4;
+DELETE FROM `el_name` WHERE id = 5;
+DELETE FROM `el_name` WHERE id = 6;
+DELETE FROM `el_name` WHERE id = 7;
+DELETE FROM `el_name` WHERE id = 8;
+DELETE FROM `el_name` WHERE id = 9;
+DELETE FROM `el_name` WHERE id = 10;
+DELETE FROM `el_name` WHERE id = 11;

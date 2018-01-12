@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.eloancn.architect.dao.CompanyDao">
+
+	<resultMap id="CompanyResultMap" type="Company">
+        <result property="id" column="id" jdbcType="INTEGER"/>
+        <result property="nameId" column="name_id" jdbcType="INTEGER"/>
+        <result property="company" column="company" jdbcType="VARCHAR"/>
+        <result property="createDate" column="create_date" jdbcType="TIMESTAMP"/>
+        <result property="updateDate" column="update_date" jdbcType="TIMESTAMP"/>
+	</resultMap>
+	
+	<sql id="Company_Column_List">
+	    <![CDATA[
+        	id,
+        	name_id,
+        	company,
+        	create_date,
+        	update_date
+	    ]]>
+	</sql>
+
+	<!-- useGeneratedKeys="true" keyProperty="xxx" for sqlserver and mysql -->
+	<insert id="insert" useGeneratedKeys="true" keyProperty="id" parameterType="Company">  
+        INSERT INTO el_company 
+		<trim prefix="(" suffix=")" suffixOverrides="," >  	
+            <if test="id != null" >
+        		id ,
+        	</if>       	 
+            <if test="nameId != null" >
+        		name_id ,
+        	</if>       	 
+            <if test="company != null" >
+        		company ,
+        	</if>       	 
+            <if test="createDate != null" >
+        		create_date ,
+        	</if>       	 
+            <if test="updateDate != null" >
+        		update_date 
+        	</if>       	 
+    	</trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+        	<if test="id != null" >
+        		#{id,jdbcType=INTEGER} ,
+        	</if>
+        	<if test="nameId != null" >
+        		#{nameId,jdbcType=INTEGER} ,
+        	</if>
+        	<if test="company != null" >
+        		#{company,jdbcType=VARCHAR} ,
+        	</if>
+        	<if test="createDate != null" >
+        		#{createDate,jdbcType=TIMESTAMP} ,
+        	</if>
+        	<if test="updateDate != null" >
+        		#{updateDate,jdbcType=TIMESTAMP} 
+        	</if>
+   		 </trim>
+		<!--	
+			oracle: order="BEFORE" SELECT sequenceName.nextval AS ID FROM DUAL 
+			DB2: order="BEFORE"" values nextval for sequenceName
+		<selectKey resultType="java.lang.Long" order="BEFORE" keyProperty="userId">
+			SELECT sequenceName.nextval AS ID FROM DUAL 
+        </selectKey>
+		-->
+	</insert>
+    
+	<update id="update" parameterType="Company">
+        UPDATE el_company 
+		<set >     
+	        <if test="nameId != null" >
+	       		name_id = #{nameId,jdbcType=INTEGER} ,
+	        </if>
+	        <if test="company != null" >
+	       		company = #{company,jdbcType=VARCHAR} ,
+	        </if>
+	        <if test="createDate != null" >
+	       		create_date = #{createDate,jdbcType=TIMESTAMP} ,
+	        </if>
+	        <if test="updateDate != null" >
+	       		update_date = #{updateDate,jdbcType=TIMESTAMP} 
+	        </if>
+    	</set>
+        WHERE 
+	        id = #{id,jdbcType=INTEGER} 
+   
+	</update>
+	<delete id="delete" parameterType="java.lang.Integer">
+        DELETE FROM el_company WHERE
+        id = #{id,jdbcType=INTEGER} 
+    </delete>   
+    <select id="get" resultMap="CompanyResultMap" parameterType="java.lang.Integer">
+		SELECT <include refid="Company_Column_List" />
+		    FROM el_company 
+	        WHERE 
+		        id = #{id,jdbcType=INTEGER} 
+	</select>		
+	<sql id="searchWhere">
+		<where>	      				
+	       <if test="id!=null">
+				AND id = #{id,jdbcType=INTEGER}
+			</if>
+	       <if test="nameId!=null">
+				AND name_id = #{nameId,jdbcType=INTEGER}
+			</if>
+	       <if test="company!=null">
+				AND company = #{company,jdbcType=VARCHAR}
+			</if>
+	       <if test="createDateBegin!=null">
+				AND create_date >= #{createDateBegin,jdbcType=TIMESTAMP}
+		   </if>
+		   <if test="createDateEnd!=null">
+				AND create_date &lt;= #{createDateEnd,jdbcType=TIMESTAMP}
+		   </if>
+	       <if test="updateDateBegin!=null">
+				AND update_date >= #{updateDateBegin,jdbcType=TIMESTAMP}
+		   </if>
+		   <if test="updateDateEnd!=null">
+				AND update_date &lt;= #{updateDateEnd,jdbcType=TIMESTAMP}
+		   </if>
+		</where>
+	</sql>
+    <select id="search" resultMap="CompanyResultMap">
+    	SELECT <include refid="Company_Column_List" />
+	    FROM el_company 
+		<include refid="searchWhere"/>
+    </select>	
+    
+	
+</mapper>
+

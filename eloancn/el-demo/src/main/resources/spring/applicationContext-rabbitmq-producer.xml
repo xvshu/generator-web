@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:rabbit="http://www.springframework.org/schema/rabbit"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/rabbit
+       http://www.springframework.org/schema/rabbit/spring-rabbit-1.3.xsd">
+
+
+    <!-- factory -->
+    <bean id="ampConnectionFactory" class="com.eloancn.framework.queue.AmpConnectionFactory">
+        <property name="hostname" value="${rabbit.host}"></property>
+        <property name="port" value="${rabbit.port}"></property>
+        <property name="username" value="${rabbit.username}"></property>
+        <property name="password" value="${rabbit.password}"></property>
+        <property name="defaultVirtualHost" value="/account"></property>
+    </bean>
+
+
+    <!-- 推送发息数据 start -->
+    <bean id="amqMessageService" class="com.eloancn.framework.queue.AmqMessageService">
+        <property name="ampConnectionFactory" ref="ampConnectionFactory"/>
+        <property name="redisTemplate" ref="redisTemplate"/>
+        <property name="serialNoFieldName" value="id"/>
+        <property name="appId" value="el_demo"/>
+        <property name="virtualHost" value="/account"/>
+    </bean>
+    <!-- 推送发息数据 end -->
+
+</beans>

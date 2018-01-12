@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>翼龙贷 项目模板工具 - 3.9.2.20100720</title>
+    <link rel="stylesheet" type="text/css" href="/static/css/easyui.css">
+    <link rel="stylesheet" type="text/css" href="/static/css/icon.css">
+    <script type="text/javascript" src="/static/js/jquery.min.js"></script>
+    <script type="text/javascript" src="/static/js/jquery.easyui.min.js"></script>
+</head>
+<body style="text-align: center" >
+<h1>翼龙贷 项目模板工具</h1>
+<form id="ff" method="post">
+    <h4 style="margin-left:15%;text-align:left;">项目配置</h4>
+    <div class="datagrid-header" style="margin: 0 auto;width: 70%;"></div>
+    <table cellpadding="5" align="center" width="60%">
+        <tr>
+            <td>项目包名:</td>
+            <td><input class="easyui-textbox" type="text" name="basePackage" data-options="prompt:'com.el.test',required:true,value:'com.el.test'" validType="PackageName" /></td>
+
+            <td>项目名称:</td>
+            <td><input class="easyui-textbox" type="text" id="projectName" name="projectName" data-options="prompt:'el-test',required:true,value:'test'" validType="ProjectName"/></td>
+        </tr>
+
+    </table>
+
+    <h4 style="margin-left:15%;text-align:left;">数据库配置</h4>
+    <div class="datagrid-header" style="margin: 0 auto;width: 70%;"></div>
+    <table cellpadding="5" align="center" width="60%">
+        <tr>
+            <td>Ip地址:</td>
+            <td><input class="easyui-textbox" type="text" name="jdbcIp" data-options="prompt:'mysql ip',required:true,value:'192.168.2.16'" validType="Ip"/></td>
+
+            <td>端口:</td>
+            <td><input class="easyui-textbox" type="text" name="jdbcPort" data-options="prompt:'mysql port',required:true,value:'3316'" validType="Port" /></td>
+
+            <td>名称:</td>
+            <td><input class="easyui-textbox" type="text" name="jdbcDatabase" data-options="prompt:'mysql database',required:true,value:'test'" /></td>
+        </tr>
+        <tr>
+            <td>用户名:</td>
+            <td><input class="easyui-textbox" type="text" name="jdbcUserName" data-options="prompt:'mysql username',required:true,value:'dba'" /></td>
+
+            <td>密码:</td>
+            <td><input class="easyui-textbox" type="text" name="jdbcPassWord" data-options="prompt:'mysql password',required:true,value:'dba123'" /></td>
+        </tr>
+
+        <tr>
+            <td>表前缀:</td>
+            <td><input class="easyui-textbox" type="text" name="tableRemovePrefixes" data-options="prompt:'el_,dic_',value:'el_'" /></td>
+
+            <td colspan="5" style="text-align: left;color: #0000FF">
+                *需要移除的表名前缀,多个前缀使用逗号进行分隔,示例值: el_,dic_
+            </td>
+
+        </tr>
+
+        <tr>
+            <td>创建页面的表名:</td>
+            <td><input class="easyui-textbox" type="text" name="tableCreateJsp" data-options="prompt:'dic_demo,dic_test',value:'el_name'" /></td>
+
+            <td colspan="5" style="text-align: left;color: #0000FF">
+                *生成表的增删改查操作，多个前缀使用逗号进行分隔,示例值: dic_demo,dic_test
+            </td>
+
+        </tr>
+    </table>
+</form>
+<div style="text-align:right;margin-right:20%;padding:50px">
+    <a href="javascript:void(0)" class="easyui-linkbutton" onclick="buildWebSocket('/generator/web')"> 创建Web项目 </a>
+    <a href="javascript:void(0)" class="easyui-linkbutton" onclick="buildWebSocket('/generator/micro')"> 创建微服务 </a>
+</div>
+
+<div class="panel panel-htop easyui-fluid" style="display: block; width: 100%;">
+    <div class="panel-header" style="margin-left: 10%;width: 80%;">
+        <div class="panel-title">控制台</div>
+        <div class="panel-tool"></div>
+    </div>
+
+    <div id="p" class="panel-body" style="margin-left: 10%; padding: 10px; width: 80%; height: 151px;">
+
+    </div>
+</div>
+
+<script>
+
+    //自定义校验
+    $.extend($.fn.validatebox.defaults.rules, {
+        PackageName:{
+            validator:function(value,param){
+                var reg = /^[a-z\.]*$/g;
+                return reg.test(value);
+            },
+            message:  'package name error!'
+        },
+        ProjectName:{
+            validator:function(value,param){
+                var reg = /^[a-zA-Z0-9\-]*$/g;
+                return reg.test(value);
+            },
+            message:  'project name error!'
+        },
+        Ip:{
+            validator:function(value,param){
+                var reg = /^((1?\d?\d|(2([0-4]\d|5[0-5])))\.){3}(1?\d?\d|(2([0-4]\d|5[0-5])))$/ ;
+                return reg.test(value);
+            },
+            message:  'mysql ip error!'
+        },
+        Port:{
+            validator:function(value,param){
+                var reg = /^([0-9]|[1-9]\d|[1-9]\d{2}|[1-9]\d{3}|[1-5]\d{4}|6[0-4]\d{3}|65[0-4]\d{2}|655[0-2]\d|6553[0-5])$/;
+                return reg.test(value);
+            },
+            message:  'mysql port error!'
+        }
+    });
+
+    function buildWebSocket(url){
+        // 指定websocket路径
+//        var websocket = new WebSocket('ws://localhost:8080/ws.do?'+$("#projectName").val());
+        var websocket = new WebSocket('ws://192.168.0.112:8080/ws.do?'+$("#projectName").val());
+        websocket.onmessage = function(event) {
+            // 接收服务端的实时日志并添加到HTML页面中
+            var div = document.getElementById('p');
+            var _data = event.data;
+            if(_data != ''){
+                _data = _data.replace(/"/g,'');
+            }
+            div.innerHTML = div.innerHTML + '<p>' + _data + '<p/>';
+            div.scrollTop = div.scrollHeight;
+        };
+        websocket.onopen = function(event){
+            submitForm(url);
+        };
+    }
+
+    function submitForm(url){
+        $('#ff').form('submit', {
+            url: url,
+            onSubmit: function(){
+                return $(this).form("validate");
+            },
+            success:function(data){
+                // do nothing
+            }
+        });
+    }
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<parent>
+		<groupId>com.el.parent</groupId>
+		<artifactId>el-pom</artifactId>
+		<version>1.0.1</version>
+	</parent>
+    <modelVersion>4.0.0</modelVersion>
+	<groupId>${basepackage}</groupId>
+    <artifactId>${project_name}-api</artifactId>
+	<version>1.0-SNAPSHOT</version>
+    <name>${project_name}-api</name>
+	<!-- jar包依赖 begin-->
+	<dependencies>
+		<dependency>
+			<groupId>com.eloancn.common</groupId>
+			<artifactId>common-api</artifactId>
+			<exclusions>
+				<exclusion>
+					<artifactId>swagger-annotations</artifactId>
+					<groupId>com.wordnik</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>jboss-logging</artifactId>
+					<groupId>org.jboss.logging</groupId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>org.jboss.resteasy</groupId>
+			<artifactId>resteasy-jaxrs</artifactId>
+			<exclusions>
+				<exclusion>
+					<artifactId>httpclient</artifactId>
+					<groupId>org.apache.httpcomponents</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>activation</artifactId>
+					<groupId>javax.activation</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>commons-io</artifactId>
+					<groupId>commons-io</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>jboss-annotations-api_1.1_spec</artifactId>
+					<groupId>org.jboss.spec.javax.annotation</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>jcip-annotations</artifactId>
+					<groupId>net.jcip</groupId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+	</dependencies>
+	<!-- jar包依赖 end-->
+
+
+	<build>
+		<plugins>
+			<plugin>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+				<source>1.7</source>
+				<target>1.7</target>
+				<encoding>UTF-8</encoding>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>com.rapid.generator</groupId>
+				<artifactId>gen-api</artifactId>
+				<version>3.9.2</version>
+			</plugin>
+		</plugins>
+	</build>
+</project>

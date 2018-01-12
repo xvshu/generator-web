@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xsi:schemaLocation="http://www.springframework.org/schema/beans
+			http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+			http://code.alibabatech.com/schema/dubbo
+			http://code.alibabatech.com/schema/dubbo/dubbo.xsd"
+	   xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xmlns="http://www.springframework.org/schema/beans">
+
+	<!-- 提供方应用信息 -->
+	<dubbo:application name="el_demo" owner="el_demo" organization="dubbox"/>
+	<!-- dubbo接口去除注册中心，采用直连的方式 -->
+	<!-- <dubbo:registry address="N/A" ></dubbo:registry> -->
+	<!-- 使用zookeeper注册中心暴露服务地址 -->
+	<dubbo:registry id="elZookeeper" protocol="zookeeper" address="${zookeeper.address}" timeout="15000"/>
+	<!-- 用dubbo协议在20880端口暴露服务 -->
+	<dubbo:protocol name="dubbo" port="20880" />
+
+	<!-- 声明需要暴露的服务接口-->
+	<dubbo:service protocol="dubbo" ref ="nameManager" interface="com.eloancn.architect.api.NameService"
+				   group="el-demo" version="1.0-SNAPSHOT"/>
+
+
+
+	<dubbo:reference interface="com.eloancn.framework.activiti.service.ElActivitiService" id="elActiviti" group="el-activiti-soa" version="1.1.0"
+				   timeout="60000" protocol="dubbo" registry="elZookeeper" lazy="true" check="false" retries="0" />
+
+	<!-- 组织机构用户服务 -->
+	<dubbo:reference interface="com.eloancn.organ.api.UserService" id="userOrganService" group="organ-soa" version="1.0.0"
+					 timeout="60000" protocol="dubbo" registry="elZookeeper" lazy="true" check="false" retries="0" />
+
+</beans>

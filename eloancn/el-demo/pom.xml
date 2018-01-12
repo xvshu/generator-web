@@ -1,0 +1,278 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>com.el.parent</groupId>
+    <artifactId>el-pom</artifactId>
+    <version>1.0.1</version>
+  </parent>
+  <groupId>com.eloancn.framework</groupId>
+  <version>1.0-SNAPSHOT</version>
+  <artifactId>el-demo</artifactId>
+  <packaging>war</packaging>
+
+  <!-- jar包依赖 begin-->
+  <dependencies>
+
+    <!--spring-begin-->
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-core</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-beans</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-context</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-aop</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-aspects</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-tx</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-jdbc</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-web</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-test</artifactId>
+    </dependency>
+    <!--spring-end-->
+
+    <!--mybatis-begin-->
+    <dependency>
+      <groupId>org.mybatis</groupId>
+      <artifactId>mybatis</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.mybatis</groupId>
+      <artifactId>mybatis-spring</artifactId>
+    </dependency>
+    <!--mybatis-end-->
+
+    <!--mysql-begin-->
+    <dependency>
+      <groupId>mysql</groupId>
+      <artifactId>mysql-connector-java</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.alibaba</groupId>
+      <artifactId>druid</artifactId>
+    </dependency>
+    <!--mysql-end-->
+
+    <dependency>
+      <groupId>org.springframework.data</groupId>
+      <artifactId>spring-data-redis</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>redis.clients</groupId>
+      <artifactId>jedis</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.amqp</groupId>
+      <artifactId>spring-rabbit</artifactId>
+    </dependency>
+
+    <!-- LOGGING begin -->
+    <!-- slf4j -->
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-api</artifactId>
+    </dependency>
+    <!-- logback -->
+    <dependency>
+      <groupId>ch.qos.logback</groupId>
+      <artifactId>logback-classic</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>log4j-over-slf4j</artifactId>
+      <scope>runtime</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>jcl-over-slf4j</artifactId>
+      <scope>runtime</scope>
+    </dependency>
+
+    <!-- 代码直接调用java.util.logging会被桥接到slf4j -->
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>jul-to-slf4j</artifactId>
+      <scope>runtime</scope>
+    </dependency>
+    <!-- log4jdbc -->
+    <dependency>
+      <groupId>org.bgee.log4jdbc-log4j2</groupId>
+      <artifactId>log4jdbc-log4j2-jdbc4</artifactId>
+      <scope>runtime</scope>
+    </dependency>
+    <!-- LOGGING end -->
+
+    <!-- test-begin -->
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+    </dependency>
+    <!-- test-end -->
+
+    <!--eloancn-framework-begin-->
+    <dependency>
+      <groupId>com.eloancn.framework</groupId>
+      <artifactId>el-cas</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.eloancn.framework</groupId>
+      <artifactId>el-queue</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.eloancn.framework</groupId>
+      <artifactId>el-orm</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.eloancn.framework</groupId>
+      <artifactId>el</artifactId>
+    </dependency>
+    <!--eloancn-framework-end-->
+
+    <!-- dubbo-begin -->
+    <dependency>
+      <groupId>com.alibaba</groupId>
+      <artifactId>dubbo</artifactId>
+      <exclusions>
+        <exclusion>
+          <artifactId>curator-client</artifactId>
+          <groupId>org.apache.curator</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>curator-framework</artifactId>
+          <groupId>org.apache.curator</groupId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <!-- dubbo-end -->
+
+    <!-- disconf -->
+    <dependency>
+      <groupId>com.baidu.disconf</groupId>
+      <artifactId>disconf-core</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.baidu.disconf</groupId>
+      <artifactId>disconf-client</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>com.eloancn</groupId>
+      <artifactId>common</artifactId>
+      <exclusions>
+        <exclusion>
+          <groupId>com.eloancn.common</groupId>
+          <artifactId>common</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>com.eloancn.common</groupId>
+      <artifactId>common</artifactId>
+    </dependency>
+
+    <!-- spring mvc -->
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-web</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-webmvc</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-databind</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-annotations</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-core</artifactId>
+    </dependency>
+
+
+
+    <dependency>
+      <groupId>com.eloancn.framework</groupId>
+      <artifactId>el-demo-api</artifactId>
+      <version>1.0-SNAPSHOT</version>
+    </dependency>
+
+    <!-- activiti -->
+
+    <dependency>
+      <groupId>com.eloancn.activiti</groupId>
+      <artifactId>el-activiti-client</artifactId>
+      <version>1.0.0-SNAPSHOT</version>
+    </dependency>
+    <!-- activiti end-->
+
+    <!-- user login service-->
+    <dependency>
+      <groupId>com.eloancn.organ</groupId>
+      <artifactId>organ-api</artifactId>
+      <version>1.2-SNAPSHOT</version>
+    </dependency>
+    <!-- user login service end-->
+
+  </dependencies>
+  <!-- jar包依赖 end-->
+
+
+  <build>
+    <plugins>
+      <plugin>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <configuration>
+          <source>1.7</source>
+          <target>1.7</target>
+          <encoding>UTF-8</encoding>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>com.rapid.generator</groupId>
+        <artifactId>gen</artifactId>
+        <version>3.9.2</version>
+      </plugin>
+    </plugins>
+  </build>
+  <!--定义snapshots库和releases库的nexus地址-->
+  <distributionManagement>
+    <repository>
+      <id>releases</id>
+      <url>
+        http://192.168.3.232:8081/nexus/content/repositories/releases/
+      </url>
+    </repository>
+    <snapshotRepository>
+      <id>snapshots</id>
+      <url>
+        http://192.168.3.232:8081/nexus/content/repositories/snapshots/
+      </url>
+    </snapshotRepository>
+  </distributionManagement>
+</project>
