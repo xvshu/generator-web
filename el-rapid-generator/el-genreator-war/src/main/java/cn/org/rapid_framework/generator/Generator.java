@@ -213,17 +213,18 @@ public class Generator {
 			if(isCopyBinaryFile && FileHelper.isBinaryFile(srcFile)) {
 				String outputFilepath = proceeForOutputFilepath(filePathModel, templateFile);
 				GLogger.println(projectName,"[copy binary file by extention] from:"+srcFile+" => "+new File(getOutRootDir(),outputFilepath));
-				String path = getOutRootDir() + outputFilepath.substring(0,outputFilepath.lastIndexOf('\\')+1);
-				File f = new File(path);
-				if(!f.exists()){
-					f.mkdirs();
-				}
 
 				File file = new File(getOutRootDir(),outputFilepath);
+				File parent = new File(file.getPath().substring(0,file.getPath().lastIndexOf('/')+1));
+				if(!parent.exists()){
+					parent.mkdirs();
+				}
 				if(!file.exists()){
 					file.createNewFile();
 				}
+
 				IOHelper.copyAndClose(new FileInputStream(srcFile), new FileOutputStream(file));
+//				IOHelper.copyAndClose(new FileInputStream(srcFile), new FileOutputStream(new File(getOutRootDir(),outputFilepath)));
 				return;
 			}
 			
@@ -243,7 +244,7 @@ public class Generator {
                     generateNewFileOrInsertIntoFile(templateFile,outputFilepath, templateModel);
                 }
 			}catch(Exception e) {
-			    throw new RuntimeException("generate oucur error,templateFile is:" + templateFile+" => "+ outputFilepath+" cause:"+e, e);
+			     throw new RuntimeException("generate oucur error,templateFile is:" + templateFile+" => "+ outputFilepath+" cause:"+e, e);
 			}
 		}
 
@@ -424,5 +425,10 @@ public class Generator {
 			this.templateModel = templateModel;
 			this.filePathModel = filePathModel;
 		}
+	}
+
+
+	public static void main(String[] args) {
+		System.out.println("/${project_name}".replaceAll("[$]","\\\\\\$"));
 	}
 }

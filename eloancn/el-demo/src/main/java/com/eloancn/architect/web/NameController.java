@@ -5,7 +5,6 @@ import com.eloancn.architect.model.Name;
 import com.eloancn.architect.service.NameServiceBean;
 import com.eloancn.framework.orm.mybatis.paginator.domain.PageBounds;
 import com.eloancn.framework.orm.mybatis.paginator.domain.PageList;
-import com.eloancn.framework.orm.mybatis.paginator.domain.Paginator;
 import com.eloancn.framework.sevice.api.PageResultDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -71,7 +70,7 @@ public class NameController {
 
     @RequestMapping(value = "/delete/{id}",produces="text/html;charset=UTF-8")
     @ResponseBody
-    public String delete(@PathVariable("id")int id, HttpServletRequest request){
+    public String delete(@PathVariable("id")long id, HttpServletRequest request){
         logger.info("=NameController.delete=> id:{}",String.valueOf(id));
         nameServiceBean.delete(id);
         return "success";

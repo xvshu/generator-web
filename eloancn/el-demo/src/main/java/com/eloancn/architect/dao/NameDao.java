@@ -1,76 +1,31 @@
 /*
- * Powered By [crazy-framework]
- * Web Site: http://www.eloan.com
- * Since 2015 - 2017
+ * Powered By [eloancn-generator]
+ * Author:qinxf
+ * Since 2017 - 2018
  */
-
+ 
 package com.eloancn.architect.dao;
 
-import com.eloancn.framework.orm.mybatis.MyBatisRepository;
-import com.eloancn.framework.orm.mybatis.paginator.domain.PageBounds;
-
 import com.eloancn.architect.model.Name;
-import com.eloancn.framework.orm.mybatis.paginator.domain.PageList;
+import com.eloancn.framework.orm.base.dao.IBaseDao;
+import com.eloancn.framework.orm.mybatis.MyBatisRepository;
 
-import java.util.List;
 import java.util.Map;
-import java.util.Date;
+
 /**
  * <>
- * @author crazy
+ * @author qinxf
  * @version 1.0
- * @Time 2017-11-03 17:48:52
+ * @Time 2018-01-18 15:49:21
  */
 
 @MyBatisRepository
-public interface NameDao{
-	/**  
-     *   
-     * <save one>  
-     * @param name  
-     * @return Integer
-     */ 
-	int insert(Name name);
-	 /**  
-     *   
-     * <update one>  
-     * @param name  
-     * @throws DAOException  
-     */ 
-	int update(Name name);
-	 /**  
-     *   
-     * <find one by id>  
-     * @param id  
-     * @return Name
-     */ 
-	Name get(Integer id);
-	/**  
-     *   
-     * <delete one by id>  
-     * @param id  
-     * @return int
-     */ 
-	int delete(Integer id);
-	/**  
-     * <query all>  
-     * @param paramMap  
-     * @param pageBounds
+public interface NameDao extends IBaseDao<Name>{
+
+    /**
+     * <query all>
+     * @param paramMap
      * @return List<Name>
-     */ 
-	PageList<Name> search(Map paramMap , PageBounds pageBounds);
-
-	/**
-	 * <query all>
-	 * @param paramMap
-	 * @return List<Name>
-	 */
-	int searchcount(Map paramMap );
-
-	/**
-	 * <query list>
-	 * @param paramMap
-	 * @return
      */
-	List<Name> list(Map paramMap);
+    int searchcount(Map paramMap );
 }

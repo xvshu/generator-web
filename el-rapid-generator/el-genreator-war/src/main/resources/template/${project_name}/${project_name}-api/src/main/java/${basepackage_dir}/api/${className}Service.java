@@ -27,7 +27,7 @@ public interface ${className}Service{
 	@POST
 	@Produces({MediaType.APPLICATION_JSON})
     @Consumes({MediaType.APPLICATION_JSON})
-	ResultDTO<Integer> insert${className}(${className}Dto ${classNameLower}Dto);
+	ResultDTO<Long> insert${className}(${className}Dto ${classNameLower}Dto);
 	 /**  
      *   
      * <update one>  

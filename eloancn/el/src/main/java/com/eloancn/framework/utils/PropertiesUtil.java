@@ -13,11 +13,13 @@ import java.security.PrivilegedAction;
 
 
 public class PropertiesUtil {
+
+	private static final String SYSTEM_CODE = "system.code";
 	private static Logger log = LoggerFactory.getLogger(PropertiesUtil.class);
 	private static Configuration config = null;
 	static {
 		try {
-			InputStream configFile = getResourceAsStream("/properties/const.properties");
+			InputStream configFile = getResourceAsStream("/properties/application.properties");
 			config = new PropertiesConfiguration();
 			((PropertiesConfiguration) config).load(configFile);
 		} catch (Exception e) {

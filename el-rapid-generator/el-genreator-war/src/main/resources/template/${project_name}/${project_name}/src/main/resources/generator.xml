@@ -10,6 +10,9 @@
 	<!-- tableRemovePrefixes,eg: t_,v_ -->
 	<entry key="tableRemovePrefixes">${tableRemovePrefixes}</entry>
 
+	<!-- tables -->
+	<entry key="tableParameter">*</entry>
+
 	<!-- Mysql -->
 	<entry key="jdbc_url">${jdbc_url}</entry>
 	<entry key="jdbc_driver">${jdbc_driver}</entry>

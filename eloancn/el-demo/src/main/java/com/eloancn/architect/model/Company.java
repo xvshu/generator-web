@@ -1,9 +1,9 @@
 /*
- * Powered By [crazy-framework]
- * Web Site: http://www.eloan.com
- * Since 2015 - 2017
+ * Powered By [eloancn-generator]
+ * Author:qinxf
+ * Since 2017 - 2018
  */
-
+ 
 package com.eloancn.architect.model;
 
 import javax.validation.constraints.*;
@@ -18,9 +18,9 @@ import java.util.Map;
 import java.util.Date;
 /**
  * <>
- * @author crazy
+ * @author qinxf
  * @version 1.0
- * @Time 2017-11-03 17:48:53
+ * @Time 2018-01-18 15:49:19
  */
 
 public class Company implements java.io.Serializable{
@@ -29,12 +29,12 @@ public class Company implements java.io.Serializable{
 	/**  
      * 主键  
      */ 
-	//@Max(9999999999L)
+	//
 	private Integer id;
 	/**  
      *   
      */ 
-	//@Max(9999999999L)
+	//
 	private Integer nameId;
 	/**  
      * 姓名  
@@ -56,7 +56,7 @@ public class Company implements java.io.Serializable{
 	}
 
 	public Company(
-		java.lang.Integer id
+		Integer id
 	){
 		this.id = id;
 	}

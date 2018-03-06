@@ -1,12 +1,13 @@
 /*
- * Powered By [crazy-framework]
- * Web Site: http://www.eloan.com
- * Since 2015 - 2017
+ * Powered By [eloancn-generator]
+ * Author:qinxf
+ * Since 2017 - 2018
  */
-
+ 
 package com.eloancn.architect.facade;
 
-import org.apache.commons.lang3.StringUtils;
+import com.eloancn.architect.model.Company;
+import com.eloancn.architect.service.CompanyServiceBean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,13 +16,9 @@ import org.springframework.stereotype.Service;
 import com.eloancn.framework.utils.BeanMapper;
 import com.eloancn.framework.orm.mybatis.paginator.domain.Order;
 import com.eloancn.framework.orm.mybatis.paginator.domain.PageBounds;
-import com.eloancn.framework.utils.ObjectUtils;
 
 import com.eloancn.architect.api.CompanyService;
-import com.eloancn.architect.model.Company;
-import com.eloancn.architect.service.CompanyServiceBean;
 import com.eloancn.architect.dto.CompanyDto;
-import com.eloancn.framework.sevice.api.MessageCode;
 import com.eloancn.framework.sevice.api.MessageStatus;
 import com.eloancn.framework.sevice.api.ResultDTO;
 import com.eloancn.framework.sevice.api.PageParsDTO;
@@ -30,12 +27,12 @@ import com.eloancn.framework.orm.mybatis.paginator.PaginatorUtil;
 import com.eloancn.framework.annotation.Validated;
 import java.util.List;
 import java.util.Map;
-import java.util.Date;
+
 /**
  * <>
- * @author crazy
+ * @author qinxf
  * @version 1.0
- * @Time 2017-11-03 17:48:53
+ * @Time 2018-01-18 15:49:19
  */
 
 @Service
@@ -52,7 +49,6 @@ public class CompanyManager implements CompanyService{
 	/**  
      *   
      * <save one>  
-     * @param company  
      * @return ResultDTO<Integer>
      */ 
 	@Validated
@@ -82,8 +78,7 @@ public class CompanyManager implements CompanyService{
 	 /**  
      *   
      * <update one>  
-     * @param company  
-     * @return ResultDTO<Integer>  
+     * @return ResultDTO<Integer>
      */ 
 	@Validated
 	public ResultDTO<Integer> updateCompany(CompanyDto companyDto){
@@ -112,12 +107,11 @@ public class CompanyManager implements CompanyService{
 	 /**  
      *   
      * <find one by id>  
-     * @param id  
      * @return ResultDTO<CompanyDto>
      */ 
-	public ResultDTO<CompanyDto> getCompanyById(Integer id){
+	public ResultDTO<CompanyDto> getCompanyById(Long id){
 		if(logger.isDebugEnabled()){
-			logger.debug("CompanyManager.getCompanyById(Integer id) start-->", id);
+			logger.debug("CompanyManager.getCompanyById(Long id) start-->", id);
 		}		
 		ResultDTO<CompanyDto> result= new ResultDTO<CompanyDto>();
 		Company company=null;
@@ -130,18 +124,17 @@ public class CompanyManager implements CompanyService{
 			//result.setMessage(MessageCode.SUCCESS.getMessage());
 			//result.setCode(MessageCode.SUCCESS.getCode());
 			if(logger.isErrorEnabled()){
-				logger.error("CompanyManager.getCompanyById(Integer id) error\n", e);
+				logger.error("CompanyManager.getCompanyById(Long id) error\n", e);
 			}
 		}	
 		if(logger.isDebugEnabled()){
-			logger.debug("CompanyManager.getCompanyById(Integer id) end-->", company);
+			logger.debug("CompanyManager.getCompanyById(Long id) end-->", company);
 		}
 		return result;
 	}
 	 /**  
      *   
      * <query all>  
-     * @param pageParsDTO  
      * @return ResultDTO<List<CompanyDto>>
      */ 
 	public ResultDTO<PageResultDTO<CompanyDto>> searchCompany(PageParsDTO<Map> pageParsDTO){

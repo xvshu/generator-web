@@ -30,7 +30,7 @@ public class SendRabbitMQ {
      * 并将Name对象发送到MQ对列
      * @param nameId
      */
-    public void send(Integer nameId){
+    public void send(Long nameId){
         if (LOGGER.isDebugEnabled()){
             LOGGER.debug("=SendRabbitMQ.send=>nameId[{}], start!", nameId);
         }

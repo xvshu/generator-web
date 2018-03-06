@@ -67,7 +67,7 @@
         ${column.sqlName} = <@mapperEl column.columnNameLower column.jdbcSqlTypeName/> <#if column_has_next>,</#if>
 		</#list>
     </delete>   
-    <select id="get" resultMap="${className}ResultMap" parameterType="${table.idColumn.javaType}">
+<select id="get" resultMap="${className}ResultMap" parameterType="${table.idColumn.javaType}">
 		SELECT <include refid="${className}_Column_List" />
 		    FROM ${table.sqlName} 
 	        WHERE 
@@ -104,17 +104,41 @@
 	    FROM ${table.sqlName} 
 		<include refid="searchWhere"/>
     </select>	
-    
-    <#list table.columns as column>
-    <#if column.unique && !column.pk>
-    <select id="getBy${column.columnName}" resultMap="${className}ResultMap" parameterType="${column.javaType}">
-	    SELECT <include refid="${className}_Column_List"/>
-	    <![CDATA[
-	        FROM ${table.sqlName} where ${column.sqlName} = <@mapperEl column.columnNameLower column.jdbcSqlTypeName/>
-	    ]]>
-    </select>
-    </#if>
-	</#list>
-	
+
+	<insert id="insertBatch" parameterType="java.util.List">
+		INSERT INTO ${table.sqlName}
+		<trim prefix="(" suffix=")" suffixOverrides="," >
+			<#list table.notPkColumns as column>
+				${column.sqlName} <#if column_has_next>,</#if>
+			</#list>
+		</trim>
+		values
+		<foreach collection="list" item="item" index="index" separator=",">
+			<trim prefix="(" suffix=")" suffixOverrides="," >
+				<#list table.notPkColumns as column>
+					 ${r"#{"}item.${column.columnNameFirstLower},jdbcType=${column.jdbcSqlTypeName}} <#if column_has_next>,</#if>
+				</#list>
+			</trim>
+		</foreach>
+	</insert>
+
+	<update id="updateBatch" parameterType="java.util.List" >
+		UPDATE ${table.sqlName}
+		<trim prefix="set" suffixOverrides=",">
+			<#list table.notPkColumns as column>
+				<trim prefix="${column.sqlName} =case" suffix="end,">
+					<foreach collection="list" item="item" index="index">
+						when id=${r"#{"}item.id} then ${r"#{"}item.${column.columnNameFirstLower}}
+					</foreach>
+				</trim>
+			</#list>
+		</trim>
+		where
+		<foreach collection="list" separator="or" item="item" index="index" >
+			id=${r"#{"}item.id}
+		</foreach>
+
+	</update>
+
 </mapper>
 

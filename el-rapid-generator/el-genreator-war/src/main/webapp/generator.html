@@ -22,6 +22,11 @@
             <td><input class="easyui-textbox" type="text" id="projectName" name="projectName" data-options="prompt:'el-test',required:true,value:'test'" validType="ProjectName"/></td>
         </tr>
 
+        <tr>
+            <td>系统编码:</td>
+            <td><input class="easyui-textbox" type="text" name="systemCode" data-options="prompt:'WsuNVcBkfxaL8mlyDYy',required:true,value:'WsuNVcBkfxaL8mlyDYy'" /></td>
+        </tr>
+
     </table>
 
     <h4 style="margin-left:15%;text-align:left;">数据库配置</h4>
@@ -118,8 +123,8 @@
 
     function buildWebSocket(url){
         // 指定websocket路径
-//        var websocket = new WebSocket('ws://localhost:8080/ws.do?'+$("#projectName").val());
-        var websocket = new WebSocket('ws://192.168.0.112:8080/ws.do?'+$("#projectName").val());
+        var websocket = new WebSocket('ws://localhost:8080/ws.do?'+$("#projectName").val());
+//        var websocket = new WebSocket('ws://192.168.0.112:8080/ws.do?'+$("#projectName").val());
         websocket.onmessage = function(event) {
             // 接收服务端的实时日志并添加到HTML页面中
             var div = document.getElementById('p');

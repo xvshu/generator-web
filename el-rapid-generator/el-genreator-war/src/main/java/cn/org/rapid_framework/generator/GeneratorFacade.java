@@ -42,12 +42,13 @@ public class GeneratorFacade {
 	}
 
 	public GeneratorFacade(String basePackage, String projectName, String tableRemovePrefixes, String jdbcIp,
-						   String jdbcPort,String jdbcDatabase,String jdbcUserName,String jdbcPassWord,String realPath,String tables){
+						   String jdbcPort,String jdbcDatabase,String jdbcUserName,String jdbcPassWord,String realPath,String tables,String systemCode){
 		String abspath= realPath + "outRoot/";
 		g.setOutRootDir(abspath);
 		g.setProjectName(projectName);
 		GeneratorProperties.setProperty("basepackage", basePackage);
 		GeneratorProperties.setProperty("project_name", projectName);
+		GeneratorProperties.setProperty("systemCode", systemCode);
 		GeneratorProperties.setProperty("tableRemovePrefixes", tableRemovePrefixes);
 		String jdbc_url = "jdbc:mysql://"+jdbcIp+":"+jdbcPort+"/"+jdbcDatabase+"?useUnicode=true&amp;characterEncoding=UTF-8";
 		GeneratorProperties.setProperty("jdbc_url", jdbc_url);

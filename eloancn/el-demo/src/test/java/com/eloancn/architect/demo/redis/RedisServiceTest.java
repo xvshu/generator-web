@@ -44,7 +44,7 @@ public class RedisServiceTest extends SpringBaseTest {
         Assert.isTrue(name.getId() == 12);
 
         //delete
-        int deleteFlag = redisService.delete(name.getId());
+        int deleteFlag = redisService.delete(Long.valueOf(name.getId()));
         LOGGER.info("=RedisServiceTest.testCacheableInsertAndDelete=>delete Name flag[{}]", deleteFlag);
         Assert.isTrue(deleteFlag == 1);
 
@@ -56,13 +56,13 @@ public class RedisServiceTest extends SpringBaseTest {
         LOGGER.info("=RedisServiceTest.testCacheableGet=>start at time[{}]", System.currentTimeMillis());
 
         //get
-        Name cacheName = redisService.get(1);
+        Name cacheName = redisService.get(1L);
         Assert.isTrue(cacheName != null);
         Assert.isTrue(cacheName.getId() == 1);
 
         //cache get
         LOGGER.info("=RedisServiceTest.testCacheableGet=>cache get Name start time[{}]", System.currentTimeMillis());
-        redisService.get(1);
+        redisService.get(1L);
         LOGGER.info("=RedisServiceTest.testCacheableGet=>cache get Name end time[{}]", System.currentTimeMillis());
 
         LOGGER.info("=RedisServiceTest.testCacheableGet=>end at time[{}]", System.currentTimeMillis());

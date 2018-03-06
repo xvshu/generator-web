@@ -5,6 +5,7 @@
 	<resultMap id="NameResultMap" type="Name">
         <result property="id" column="id" jdbcType="INTEGER"/>
         <result property="name" column="name" jdbcType="VARCHAR"/>
+        <result property="sex" column="sex" jdbcType="DECIMAL"/>
         <result property="createDate" column="create_date" jdbcType="TIMESTAMP"/>
         <result property="updateDate" column="update_date" jdbcType="TIMESTAMP"/>
 	</resultMap>
@@ -13,6 +14,7 @@
 	    <![CDATA[
         	id,
         	name,
+        	sex,
         	create_date,
         	update_date
 	    ]]>
@@ -28,6 +30,9 @@
             <if test="name != null" >
         		name ,
         	</if>       	 
+            <if test="sex != null" >
+        		sex ,
+        	</if>       	 
             <if test="createDate != null" >
         		create_date ,
         	</if>       	 
@@ -41,6 +46,9 @@
         	</if>
         	<if test="name != null" >
         		#{name,jdbcType=VARCHAR} ,
+        	</if>
+        	<if test="sex != null" >
+        		#{sex,jdbcType=DECIMAL} ,
         	</if>
         	<if test="createDate != null" >
         		#{createDate,jdbcType=TIMESTAMP} ,
@@ -64,6 +72,9 @@
 	        <if test="name != null" >
 	       		name = #{name,jdbcType=VARCHAR} ,
 	        </if>
+	        <if test="sex != null" >
+	       		sex = #{sex,jdbcType=DECIMAL} ,
+	        </if>
 	        <if test="createDate != null" >
 	       		create_date = #{createDate,jdbcType=TIMESTAMP} ,
 	        </if>
@@ -75,11 +86,11 @@
 	        id = #{id,jdbcType=INTEGER} 
    
 	</update>
-	<delete id="delete" parameterType="java.lang.Integer">
+	<delete id="delete" parameterType="java.lang.Long">
         DELETE FROM el_name WHERE
         id = #{id,jdbcType=INTEGER} 
     </delete>   
-    <select id="get" resultMap="NameResultMap" parameterType="java.lang.Integer">
+    <select id="get" resultMap="NameResultMap" parameterType="java.lang.Long">
 		SELECT <include refid="Name_Column_List" />
 		    FROM el_name 
 	        WHERE 
@@ -92,6 +103,9 @@
 			</if>
 	       <if test="name!=null">
 				AND name = #{name,jdbcType=VARCHAR}
+			</if>
+	       <if test="sex!=null">
+				AND sex = #{sex,jdbcType=DECIMAL}
 			</if>
 	       <if test="createDateBegin!=null">
 				AND create_date >= #{createDateBegin,jdbcType=TIMESTAMP}
@@ -111,13 +125,63 @@
     	SELECT <include refid="Name_Column_List" />
 	    FROM el_name 
 		<include refid="searchWhere"/>
-    </select>
-
+    </select>	
+	
 	<select id="list" resultMap="NameResultMap">
-		SELECT <include refid="Name_Column_List" />
-		FROM el_name
+    	SELECT <include refid="Name_Column_List" />
+	    FROM el_name 
 		<include refid="searchWhere"/>
-	</select>
+    </select>	
+
+	<insert id="insertBatch" parameterType="java.util.List">
+		INSERT INTO el_name
+		<trim prefix="(" suffix=")" suffixOverrides="," >
+				name ,
+				sex ,
+				create_date ,
+				update_date 
+		</trim>
+		values
+		<foreach collection="list" item="item" index="index" separator=",">
+			<trim prefix="(" suffix=")" suffixOverrides="," >
+					 #{item.name,jdbcType=VARCHAR} ,
+					 #{item.sex,jdbcType=DECIMAL} ,
+					 #{item.createDate,jdbcType=TIMESTAMP} ,
+					 #{item.updateDate,jdbcType=TIMESTAMP} 
+			</trim>
+		</foreach>
+	</insert>
+
+	<update id="updateBatch" parameterType="java.util.List" >
+		UPDATE el_name
+		<trim prefix="set" suffixOverrides=",">
+				<trim prefix="name =case" suffix="end,">
+					<foreach collection="list" item="item" index="index">
+						when id=#{item.id} then #{item.name}
+					</foreach>
+				</trim>
+				<trim prefix="sex =case" suffix="end,">
+					<foreach collection="list" item="item" index="index">
+						when id=#{item.id} then #{item.sex}
+					</foreach>
+				</trim>
+				<trim prefix="create_date =case" suffix="end,">
+					<foreach collection="list" item="item" index="index">
+						when id=#{item.id} then #{item.createDate}
+					</foreach>
+				</trim>
+				<trim prefix="update_date =case" suffix="end,">
+					<foreach collection="list" item="item" index="index">
+						when id=#{item.id} then #{item.updateDate}
+					</foreach>
+				</trim>
+		</trim>
+		where
+		<foreach collection="list" separator="or" item="item" index="index" >
+			id=#{item.id}
+		</foreach>
+
+	</update>
 
 </mapper>
 

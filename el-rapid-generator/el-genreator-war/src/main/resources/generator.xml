@@ -22,7 +22,7 @@
 	<entry key="java_typemapping.java.sql.Time">java.util.Date</entry>
 	<entry key="java_typemapping.java.lang.Byte">Integer</entry>
 	<entry key="java_typemapping.java.lang.Short">Integer</entry>
-	<entry key="java_typemapping.java.lang.Integer">Integer</entry>
+	<entry key="java_typemapping.java.lang.Integer">Long</entry>
 	<entry key="java_typemapping.java.math.BigDecimal">Double</entry>
 
 	<!-- Mysql -->

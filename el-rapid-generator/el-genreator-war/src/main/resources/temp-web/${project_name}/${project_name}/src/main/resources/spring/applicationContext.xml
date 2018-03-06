@@ -121,8 +121,6 @@
 				<value>${basepackage}</value>
 			</list>
 		</property>
-		<!-- 如果你的代码没有使用接口，要加上这个配置 -->
-		<property name="proxyTargetClass" value="true"/>
 	</bean>
 	<!-- dianping cat aop config end -->
 

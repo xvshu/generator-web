@@ -44,18 +44,18 @@ public class ${className}Manager implements ${className}Service{
      * @return ResultDTO<Integer>
      */ 
 	@Validated
-	public ResultDTO<Integer> insert${className}(${className}Dto ${classNameLower}Dto){
+	public ResultDTO<Long> insert${className}(${className}Dto ${classNameLower}Dto){
 		if(logger.isDebugEnabled()){
 			logger.debug("${className}Manager.insert${className}(${className}Dto ${classNameLower}Dto) start-->", ${classNameLower}Dto);
 		}		
-		ResultDTO<Integer> result= new ResultDTO<Integer>();
+		ResultDTO<Long> result= new ResultDTO<Long>();
 		${className} ${classNameLower} = null;
 		try{
 			${classNameLower}=BeanMapper.map(${classNameLower}Dto,${className}.class);
 			${classNameLower}ServiceBean.insert(${classNameLower});
 			result.setData(${classNameLower}.getId());
 		}catch (Exception e) {
-			result.setStatus(MessageStatus.SUCCESS.getValue());
+			result.setStatus(MessageStatus.FAIL.getValue());
 			//result.setMessage(MessageCode.SUCCESS.getMessage());
 			//result.setCode(MessageCode.SUCCESS.getCode());
 			if(logger.isErrorEnabled()){
@@ -84,7 +84,7 @@ public class ${className}Manager implements ${className}Service{
 			u=${classNameLower}ServiceBean.update(${classNameLower});
 			result.setData(u);
 		}catch (Exception e) {
-			result.setStatus(MessageStatus.SUCCESS.getValue());
+			result.setStatus(MessageStatus.FAIL.getValue());
 			//result.setMessage(MessageCode.SUCCESS.getMessage());
 			//result.setCode(MessageCode.SUCCESS.getCode());
 			if(logger.isErrorEnabled()){
@@ -112,7 +112,7 @@ public class ${className}Manager implements ${className}Service{
 			${className}Dto ${classNameLower}Dto=BeanMapper.map(${classNameLower},${className}Dto.class);
 			result.setData(${classNameLower}Dto);
 		}catch (Exception e) {
-			result.setStatus(MessageStatus.SUCCESS.getValue());
+			result.setStatus(MessageStatus.FAIL.getValue());
 			//result.setMessage(MessageCode.SUCCESS.getMessage());
 			//result.setCode(MessageCode.SUCCESS.getCode());
 			if(logger.isErrorEnabled()){
@@ -140,7 +140,7 @@ public class ${className}Manager implements ${className}Service{
 			PageResultDTO<${className}Dto> pageResultDTO=PaginatorUtil.mapList(${classNameLower}List,${className}Dto.class);
 			result.setData(pageResultDTO);
 		}catch (Exception e) {
-			result.setStatus(MessageStatus.SUCCESS.getValue());
+			result.setStatus(MessageStatus.FAIL.getValue());
 			//result.setMessage(MessageCode.SUCCESS.getMessage());
 			//result.setCode(MessageCode.SUCCESS.getCode());
 			if(logger.isErrorEnabled()){

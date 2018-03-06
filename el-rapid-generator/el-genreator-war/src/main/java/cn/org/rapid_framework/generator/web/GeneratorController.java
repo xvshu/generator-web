@@ -38,7 +38,8 @@ public class GeneratorController {
                             @RequestParam String basePackage, @RequestParam String projectName,
                             @RequestParam String tableRemovePrefixes, @RequestParam String jdbcIp,
                             @RequestParam String jdbcPort, @RequestParam String jdbcDatabase,
-                            @RequestParam String jdbcUserName, @RequestParam String jdbcPassWord,@RequestParam String tableCreateJsp) throws Exception {
+                            @RequestParam String jdbcUserName, @RequestParam String jdbcPassWord,
+                            @RequestParam String tableCreateJsp, @RequestParam String systemCode) throws Exception {
 
         WebsocketHandler.sendMessageToUser(projectName, new TextMessage(new GsonBuilder().disableHtmlEscaping().create().
                 toJson("=GeneratorController.web=>basePackage["+basePackage+"],projectName["+projectName+"],tableRemovePrefixes["+tableRemovePrefixes
@@ -51,7 +52,7 @@ public class GeneratorController {
         LOGGER.info("---------------------------------realPath-------"+realPath);
 
         //生成项目
-        GeneratorFacade g = new GeneratorFacade(basePackage,projectName,tableRemovePrefixes,jdbcIp,jdbcPort,jdbcDatabase,jdbcUserName,jdbcPassWord,realPath,tableCreateJsp);
+        GeneratorFacade g = new GeneratorFacade(basePackage,projectName,tableRemovePrefixes,jdbcIp,jdbcPort,jdbcDatabase,jdbcUserName,jdbcPassWord,realPath,tableCreateJsp,systemCode);
         g.deleteOutRootDir();							//删除生成器的输出目录
 
         if (!StringUtils.isEmpty(tableCreateJsp)){
@@ -109,7 +110,7 @@ public class GeneratorController {
                                             @RequestParam String basePackage, @RequestParam String projectName,
                                             @RequestParam String tableRemovePrefixes, @RequestParam String jdbcIp,
                                             @RequestParam String jdbcPort, @RequestParam String jdbcDatabase,
-                                            @RequestParam String jdbcUserName, @RequestParam String jdbcPassWord) throws Exception {
+                                            @RequestParam String jdbcUserName, @RequestParam String jdbcPassWord, @RequestParam String systemCode) throws Exception {
 
         WebsocketHandler.sendMessageToUser(projectName, new TextMessage(new GsonBuilder().disableHtmlEscaping().create().
                 toJson("=GeneratorController.micro=>basePackage["+basePackage+"],projectName["+projectName+"],tableRemovePrefixes["+tableRemovePrefixes
@@ -122,7 +123,7 @@ public class GeneratorController {
         LOGGER.info("---------------------------------realPath-------"+realPath);
 
         //生成项目
-        GeneratorFacade g = new GeneratorFacade(basePackage,projectName,tableRemovePrefixes,jdbcIp,jdbcPort,jdbcDatabase,jdbcUserName,jdbcPassWord,realPath,"");
+        GeneratorFacade g = new GeneratorFacade(basePackage,projectName,tableRemovePrefixes,jdbcIp,jdbcPort,jdbcDatabase,jdbcUserName,jdbcPassWord,realPath,"",systemCode);
         g.deleteOutRootDir();							//删除生成器的输出目录
         g.generateByAllTable(realPath + "WEB-INF/classes/template");	//自动搜索数据库中的所有表并生成文件,template为模板的根目录
         TableFactory.getInstance().getConnection().close();

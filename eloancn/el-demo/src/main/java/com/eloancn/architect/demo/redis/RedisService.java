@@ -95,7 +95,7 @@ public class RedisService {
 
     //根据方法的请求参数对其结果进行缓存
     @Cacheable(value = "Name", key = "'id_'+#id")
-    public Name get(Integer id){
+    public Name get(Long id){
         LOGGER.info("=RedisService.get=>get Name id[{}] one time!", id);
         return nameDao.get(id);
     }
@@ -112,7 +112,7 @@ public class RedisService {
 
     //根据一定的条件对缓存进行清空
     @CacheEvict(value = "Name", key = "'id_'+#id")
-    public int delete(Integer id){
+    public int delete(Long id){
         return nameDao.delete(id);
     }
 

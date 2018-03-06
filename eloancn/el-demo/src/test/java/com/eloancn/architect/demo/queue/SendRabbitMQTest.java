@@ -20,7 +20,7 @@ public class SendRabbitMQTest extends SpringBaseTest {
     @org.junit.Test
     public void testSendRabbitMQ() throws Exception {
         LOGGER.info("=SendRabbitMQTest.testSendRabbitMQ=>start at time[{}]", System.currentTimeMillis());
-        sendRabbitMQ.send(1);
+        sendRabbitMQ.send(1L);
         //沉睡一会，等待消费
         Thread.sleep(5000);
         LOGGER.info("=SendRabbitMQTest.testSendRabbitMQ=>end at time[{}]", System.currentTimeMillis());

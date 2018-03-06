@@ -1,31 +1,34 @@
 /*
- * Powered By [crazy-framework]
- * Web Site: http://www.eloan.com
- * Since 2015 - 2017
+ * Powered By [eloancn-generator]
+ * Author:qinxf
+ * Since 2017 - 2018
  */
-
+ 
 package com.eloancn.architect.service;
 
-import com.eloancn.architect.dao.NameDao;
-import com.eloancn.architect.model.Name;
-import com.eloancn.framework.orm.mybatis.paginator.domain.PageBounds;
-import com.eloancn.framework.orm.mybatis.paginator.domain.PageList;
-import com.eloancn.framework.utils.ObjectUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import com.eloancn.framework.orm.mybatis.paginator.domain.PageBounds;
+import com.eloancn.framework.orm.mybatis.paginator.domain.PageList;
+import com.eloancn.framework.utils.ObjectUtils;
 
+import com.eloancn.framework.orm.base.service.BaseService;
+import com.eloancn.architect.model.Name;
+import com.eloancn.architect.dao.NameDao;
+import java.util.List;
 import java.util.Map;
+import java.util.Date;
 /**
  * <>
- * @author crazy
+ * @author qinxf
  * @version 1.0
- * @Time 2017-11-03 17:48:52
+ * @Time 2018-01-18 15:49:21
  */
 
 @Service
-public class NameServiceBean{
+public class NameServiceBean extends BaseService<Name>{
 	
 	private static final Logger logger = LoggerFactory.getLogger(NameServiceBean.class);
 	
@@ -34,85 +37,6 @@ public class NameServiceBean{
 	@Autowired
 	public void setNameDao(NameDao nameDao) {
 		this.nameDao = nameDao;
-	}
-	/**  
-     *   
-     * <save one>  
-     * @param name  
-     * @return Integer
-     */ 
-	public void insert(Name name){
-		if(logger.isDebugEnabled()){
-			logger.debug("NameServiceBean.insert(Name name) start-->", name);
-		}
-		if(ObjectUtils.isNullOrEmpty(name)){
-			
-		}
-		
-		int i=nameDao.insert(name);
-		if(logger.isDebugEnabled()){
-			logger.debug("NameServiceBean.insert(Name name) end-->", i);
-		}
-	}
-	 /**  
-     *   
-     * <update one>  
-     * @param name  
-     * @throws DAOException  
-     */ 
-	public int update(Name name){
-		if(logger.isDebugEnabled()){
-			logger.debug("NameServiceBean.update(Name name) start-->", name);
-		}
-		if(ObjectUtils.isNullOrEmpty(name)){
-			
-		}
-		
-		int u=nameDao.update(name);
-		if(logger.isDebugEnabled()){
-			logger.debug("NameServiceBean.update(Name name) end-->", u);
-		}
-		return u;
-	}
-	 /**  
-     *   
-     * <find one by id>  
-     * @param id  
-     * @return Name
-     */ 
-	public Name get(Integer id){
-		if(logger.isDebugEnabled()){
-			logger.debug("NameServiceBean.get(Integer id) start-->", id);
-		}
-		if(ObjectUtils.isNullOrEmpty(id)){
-			
-		}
-		
-		Name name=nameDao.get(id);
-		if(logger.isDebugEnabled()){
-			logger.debug("NameServiceBean.get(Integer id) end-->", name);
-		}
-		return name;
-	}
-	/**  
-     * <query all>  
-     * @param paramMap  
-     * @param pageBounds
-     * @return List<Name>
-     */ 
-	public PageList<Name> search(Map paramMap , PageBounds pageBounds){
-		if(logger.isDebugEnabled()){
-			logger.debug("NameServiceBean.search(Map paramMap ,PageBounds pageBounds) start-->", paramMap);
-		}
-		if(ObjectUtils.isNullOrEmpty(paramMap)){
-			
-		}
-
-		PageList<Name> nameList=nameDao.search(paramMap,pageBounds);
-		if(logger.isDebugEnabled()){
-			logger.debug("NameServiceBean.search(Map paramMap ,PageBounds pageBounds) end-->", nameList);
-		}
-		return nameList;
 	}
 
 	/**
@@ -134,25 +58,4 @@ public class NameServiceBean{
 		}
 		return result;
 	}
-
-	/**
-	 * <query all>
-	 * @param id
-	 * @return List<Name>
-	 */
-	public int delete(int id){
-		if(logger.isDebugEnabled()){
-			logger.debug("NameServiceBean.delete(int id ) start-->id:{}", id);
-		}
-		if(ObjectUtils.isNullOrEmpty(id)){
-
-		}
-
-		int result =nameDao.delete(id);
-		if(logger.isDebugEnabled()){
-			logger.debug("NameServiceBean.delete(int id ) end-->result:{}", result);
-		}
-		return result;
-	}
-	
 }

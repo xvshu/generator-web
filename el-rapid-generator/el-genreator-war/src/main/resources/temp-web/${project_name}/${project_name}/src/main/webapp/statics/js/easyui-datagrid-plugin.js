@@ -22,7 +22,9 @@ $.fn.datagrid.defaults.view = $.extend({}, $.fn.datagrid.defaults.view, {
             var fieldSp = field.split(".");
             var dta = rowData[fieldSp[0]];
             for (var j = 1; j < fieldSp.length; j++) {
-                dta = dta[fieldSp[j]];
+                if(dta && dta[fieldSp[j]]){
+                    dta = dta[fieldSp[j]];
+                }
             }
             if (col) {
                 // get the cell style attribute

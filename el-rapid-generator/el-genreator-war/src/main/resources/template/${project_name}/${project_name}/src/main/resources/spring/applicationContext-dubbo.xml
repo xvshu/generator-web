@@ -8,7 +8,7 @@
 	   xmlns="http://www.springframework.org/schema/beans">
 
 	<!-- 提供方应用信息 -->
-	<dubbo:application name="el_demo" owner="el_demo" organization="dubbox"/>
+	<dubbo:application name="${project_name}" owner="${project_name}" organization="dubbox"/>
 	<!-- dubbo接口去除注册中心，采用直连的方式 -->
 	<!-- <dubbo:registry address="N/A" ></dubbo:registry> -->
 	<!-- 使用zookeeper注册中心暴露服务地址 -->

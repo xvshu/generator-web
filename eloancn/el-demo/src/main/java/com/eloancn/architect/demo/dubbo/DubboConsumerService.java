@@ -27,7 +27,7 @@ public class DubboConsumerService {
      * @param id
      * @return
      */
-    public ResultDTO<NameDto> getNameById(Integer id){
+    public ResultDTO<NameDto> getNameById(Long id){
         if (LOGGER.isDebugEnabled()){
             LOGGER.debug("=DubboConsumerService.getNameById=>get name[id={}] from dubbo service start!",id);
         }

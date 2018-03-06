@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.eloancn.architect.dao.MqLogDao">
+
+	<resultMap id="MqLogResultMap" type="MqLog">
+        <result property="id" column="id" jdbcType="INTEGER"/>
+        <result property="messageId" column="message_id" jdbcType="VARCHAR"/>
+        <result property="exchange" column="exchange" jdbcType="VARCHAR"/>
+        <result property="routingKey" column="routingKey" jdbcType="VARCHAR"/>
+        <result property="error" column="error" jdbcType="LONGVARCHAR"/>
+        <result property="messageBody" column="message_body" jdbcType="LONGVARCHAR"/>
+        <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+	</resultMap>
+	
+	<sql id="MqLog_Column_List">
+	    <![CDATA[
+        	id,
+        	message_id,
+        	exchange,
+        	routingKey,
+        	error,
+        	message_body,
+        	update_time
+	    ]]>
+	</sql>
+
+	<!-- useGeneratedKeys="true" keyProperty="xxx" for sqlserver and mysql -->
+	<insert id="insert" useGeneratedKeys="true" keyProperty="id" parameterType="MqLog">  
+        INSERT INTO el_mq_log 
+		<trim prefix="(" suffix=")" suffixOverrides="," >  	
+            <if test="id != null" >
+        		id ,
+        	</if>       	 
+            <if test="messageId != null" >
+        		message_id ,
+        	</if>       	 
+            <if test="exchange != null" >
+        		exchange ,
+        	</if>       	 
+            <if test="routingKey != null" >
+        		routingKey ,
+        	</if>       	 
+            <if test="error != null" >
+        		error ,
+        	</if>       	 
+            <if test="messageBody != null" >
+        		message_body ,
+        	</if>       	 
+            <if test="updateTime != null" >
+        		update_time 
+        	</if>       	 
+    	</trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+        	<if test="id != null" >
+        		#{id,jdbcType=INTEGER} ,
+        	</if>
+        	<if test="messageId != null" >
+        		#{messageId,jdbcType=VARCHAR} ,
+        	</if>
+        	<if test="exchange != null" >
+        		#{exchange,jdbcType=VARCHAR} ,
+        	</if>
+        	<if test="routingKey != null" >
+        		#{routingKey,jdbcType=VARCHAR} ,
+        	</if>
+        	<if test="error != null" >
+        		#{error,jdbcType=LONGVARCHAR} ,
+        	</if>
+        	<if test="messageBody != null" >
+        		#{messageBody,jdbcType=LONGVARCHAR} ,
+        	</if>
+        	<if test="updateTime != null" >
+        		#{updateTime,jdbcType=TIMESTAMP} 
+        	</if>
+   		 </trim>
+		<!--	
+			oracle: order="BEFORE" SELECT sequenceName.nextval AS ID FROM DUAL 
+			DB2: order="BEFORE"" values nextval for sequenceName
+		<selectKey resultType="java.lang.Long" order="BEFORE" keyProperty="userId">
+			SELECT sequenceName.nextval AS ID FROM DUAL 
+        </selectKey>
+		-->
+	</insert>
+    
+	<update id="update" parameterType="MqLog">
+        UPDATE el_mq_log 
+		<set >     
+	        <if test="messageId != null" >
+	       		message_id = #{messageId,jdbcType=VARCHAR} ,
+	        </if>
+	        <if test="exchange != null" >
+	       		exchange = #{exchange,jdbcType=VARCHAR} ,
+	        </if>
+	        <if test="routingKey != null" >
+	       		routingKey = #{routingKey,jdbcType=VARCHAR} ,
+	        </if>
+	        <if test="error != null" >
+	       		error = #{error,jdbcType=LONGVARCHAR} ,
+	        </if>
+	        <if test="messageBody != null" >
+	       		message_body = #{messageBody,jdbcType=LONGVARCHAR} ,
+	        </if>
+	        <if test="updateTime != null" >
+	       		update_time = #{updateTime,jdbcType=TIMESTAMP} 
+	        </if>
+    	</set>
+        WHERE 
+	        id = #{id,jdbcType=INTEGER} 
+   
+	</update>
+	<delete id="delete" parameterType="java.lang.Long">
+        DELETE FROM el_mq_log WHERE
+        id = #{id,jdbcType=INTEGER} 
+    </delete>   
+    <select id="get" resultMap="MqLogResultMap" parameterType="java.lang.Long">
+		SELECT <include refid="MqLog_Column_List" />
+		    FROM el_mq_log 
+	        WHERE 
+		        id = #{id,jdbcType=INTEGER} 
+	</select>		
+	<sql id="searchWhere">
+		<where>	      				
+	       <if test="id!=null">
+				AND id = #{id,jdbcType=INTEGER}
+			</if>
+	       <if test="messageId!=null">
+				AND message_id = #{messageId,jdbcType=VARCHAR}
+			</if>
+	       <if test="exchange!=null">
+				AND exchange = #{exchange,jdbcType=VARCHAR}
+			</if>
+	       <if test="routingKey!=null">
+				AND routingKey = #{routingKey,jdbcType=VARCHAR}
+			</if>
+	       <if test="error!=null">
+				AND error = #{error,jdbcType=LONGVARCHAR}
+			</if>
+	       <if test="messageBody!=null">
+				AND message_body = #{messageBody,jdbcType=LONGVARCHAR}
+			</if>
+	       <if test="updateTimeBegin!=null">
+				AND update_time >= #{updateTimeBegin,jdbcType=TIMESTAMP}
+		   </if>
+		   <if test="updateTimeEnd!=null">
+				AND update_time &lt;= #{updateTimeEnd,jdbcType=TIMESTAMP}
+		   </if>
+		</where>
+	</sql>
+    <select id="search" resultMap="MqLogResultMap">
+    	SELECT <include refid="MqLog_Column_List" />
+	    FROM el_mq_log 
+		<include refid="searchWhere"/>
+    </select>	
+	
+	<select id="list" resultMap="MqLogResultMap">
+    	SELECT <include refid="MqLog_Column_List" />
+	    FROM el_mq_log 
+		<include refid="searchWhere"/>
+    </select>	
+
+	<insert id="insertBatch" parameterType="java.util.List">
+		INSERT INTO el_mq_log
+		<trim prefix="(" suffix=")" suffixOverrides="," >
+				message_id ,
+				exchange ,
+				routingKey ,
+				error ,
+				message_body ,
+				update_time 
+		</trim>
+		values
+		<foreach collection="list" item="item" index="index" separator=",">
+			<trim prefix="(" suffix=")" suffixOverrides="," >
+					 #{item.messageId,jdbcType=VARCHAR} ,
+					 #{item.exchange,jdbcType=VARCHAR} ,
+					 #{item.routingKey,jdbcType=VARCHAR} ,
+					 #{item.error,jdbcType=LONGVARCHAR} ,
+					 #{item.messageBody,jdbcType=LONGVARCHAR} ,
+					 #{item.updateTime,jdbcType=TIMESTAMP} 
+			</trim>
+		</foreach>
+	</insert>
+
+	<update id="updateBatch" parameterType="java.util.List" >
+		UPDATE el_mq_log
+		<trim prefix="set" suffixOverrides=",">
+				<trim prefix="message_id =case" suffix="end,">
+					<foreach collection="list" item="item" index="index">
+						when id=#{item.id} then #{item.messageId}
+					</foreach>
+				</trim>
+				<trim prefix="exchange =case" suffix="end,">
+					<foreach collection="list" item="item" index="index">
+						when id=#{item.id} then #{item.exchange}
+					</foreach>
+				</trim>
+				<trim prefix="routingKey =case" suffix="end,">
+					<foreach collection="list" item="item" index="index">
+						when id=#{item.id} then #{item.routingKey}
+					</foreach>
+				</trim>
+				<trim prefix="error =case" suffix="end,">
+					<foreach collection="list" item="item" index="index">
+						when id=#{item.id} then #{item.error}
+					</foreach>
+				</trim>
+				<trim prefix="message_body =case" suffix="end,">
+					<foreach collection="list" item="item" index="index">
+						when id=#{item.id} then #{item.messageBody}
+					</foreach>
+				</trim>
+				<trim prefix="update_time =case" suffix="end,">
+					<foreach collection="list" item="item" index="index">
+						when id=#{item.id} then #{item.updateTime}
+					</foreach>
+				</trim>
+		</trim>
+		where
+		<foreach collection="list" separator="or" item="item" index="index" >
+			id=#{item.id}
+		</foreach>
+
+	</update>
+
+</mapper>
+

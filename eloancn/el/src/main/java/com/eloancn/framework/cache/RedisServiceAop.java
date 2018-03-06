@@ -37,8 +37,8 @@ public class RedisServiceAop {
      * @return
      * @throws Throwable
      */
-    @Around(value = "execution(* com.eloancn.framework.cache.RedisService.*(..))  " +
-            "&& !execution(* com.eloancn.framework.cache.RedisService.getRedisTemplate())")
+    @Around(value = "execution(* com.eloancn.framework.cache.RedisServiceN.*(..))  " +
+            "&& !execution(* com.eloancn.framework.cache.RedisServiceN.getRedisTemplate())")
     public Object processTx(ProceedingJoinPoint jp) throws Throwable {
 
         // 访问执行目标方法的参数
@@ -88,8 +88,8 @@ public class RedisServiceAop {
 
     private String addHostPortInfo(Object obj) {
         try {
-            if(obj instanceof RedisService){
-                RedisService redisServiceTarget = (RedisService)obj;
+            if(obj instanceof RedisServiceN){
+                RedisServiceN redisServiceTarget = (RedisServiceN)obj;
                 RedisTemplate<String, Object> redisTemplate = redisServiceTarget.getRedisTemplate();
                 RedisConnectionFactory connectionFactory = redisTemplate.getConnectionFactory();
                 if(connectionFactory instanceof JedisConnectionFactory){

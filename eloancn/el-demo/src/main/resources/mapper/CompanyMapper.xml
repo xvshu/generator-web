@@ -86,11 +86,11 @@
 	        id = #{id,jdbcType=INTEGER} 
    
 	</update>
-	<delete id="delete" parameterType="java.lang.Integer">
+	<delete id="delete" parameterType="java.lang.Long">
         DELETE FROM el_company WHERE
         id = #{id,jdbcType=INTEGER} 
     </delete>   
-    <select id="get" resultMap="CompanyResultMap" parameterType="java.lang.Integer">
+    <select id="get" resultMap="CompanyResultMap" parameterType="java.lang.Long">
 		SELECT <include refid="Company_Column_List" />
 		    FROM el_company 
 	        WHERE 
@@ -126,7 +126,62 @@
 	    FROM el_company 
 		<include refid="searchWhere"/>
     </select>	
-    
 	
+	<select id="list" resultMap="CompanyResultMap">
+    	SELECT <include refid="Company_Column_List" />
+	    FROM el_company 
+		<include refid="searchWhere"/>
+    </select>	
+
+	<insert id="insertBatch" parameterType="java.util.List">
+		INSERT INTO el_company
+		<trim prefix="(" suffix=")" suffixOverrides="," >
+				name_id ,
+				company ,
+				create_date ,
+				update_date 
+		</trim>
+		values
+		<foreach collection="list" item="item" index="index" separator=",">
+			<trim prefix="(" suffix=")" suffixOverrides="," >
+					 #{item.nameId,jdbcType=INTEGER} ,
+					 #{item.company,jdbcType=VARCHAR} ,
+					 #{item.createDate,jdbcType=TIMESTAMP} ,
+					 #{item.updateDate,jdbcType=TIMESTAMP} 
+			</trim>
+		</foreach>
+	</insert>
+
+	<update id="updateBatch" parameterType="java.util.List" >
+		UPDATE el_company
+		<trim prefix="set" suffixOverrides=",">
+				<trim prefix="name_id =case" suffix="end,">
+					<foreach collection="list" item="item" index="index">
+						when id=#{item.id} then #{item.nameId}
+					</foreach>
+				</trim>
+				<trim prefix="company =case" suffix="end,">
+					<foreach collection="list" item="item" index="index">
+						when id=#{item.id} then #{item.company}
+					</foreach>
+				</trim>
+				<trim prefix="create_date =case" suffix="end,">
+					<foreach collection="list" item="item" index="index">
+						when id=#{item.id} then #{item.createDate}
+					</foreach>
+				</trim>
+				<trim prefix="update_date =case" suffix="end,">
+					<foreach collection="list" item="item" index="index">
+						when id=#{item.id} then #{item.updateDate}
+					</foreach>
+				</trim>
+		</trim>
+		where
+		<foreach collection="list" separator="or" item="item" index="index" >
+			id=#{item.id}
+		</foreach>
+
+	</update>
+
 </mapper>
 

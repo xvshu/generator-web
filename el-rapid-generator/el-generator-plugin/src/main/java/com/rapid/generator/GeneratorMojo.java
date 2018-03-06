@@ -4,6 +4,7 @@ import cn.org.rapid_framework.generator.GeneratorFacade;
 import cn.org.rapid_framework.generator.GeneratorProperties;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
+import org.codehaus.plexus.util.StringUtils;
 
 /**
  * @goal gen
@@ -36,17 +37,22 @@ public class GeneratorMojo extends AbstarctGeneratorMojo{
             GeneratorProperties.setProperty("java_typemapping.java.sql.Time","java.util.Date");
             GeneratorProperties.setProperty("java_typemapping.java.lang.Byte","Integer");
             GeneratorProperties.setProperty("java_typemapping.java.lang.Short","Integer");
+            GeneratorProperties.setProperty("java_typemapping.java.lang.Integer","Long");
             GeneratorProperties.setProperty("java_typemapping.java.math.BigDecimal","Double");
 
             this.generator = new GeneratorFacade();
             this.generator.getGenerator().setTemplateRootDirs(new String[] { "classpath:" + template });
 
-            try {
-                this.generator.generateByAllTable();
-            } catch (Exception e) {
-                e.printStackTrace();
+            String tableParameter = getTableParameter();
+            if(StringUtils.isNotEmpty(tableParameter) && !tableParameter.equals("*")){
+                genByTable(parseStringArray(getTableParameter()));
+            }else{
+                try {
+                    this.generator.generateByAllTable();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
-//            genByTable(parseStringArray(getTableParameter()));
         } finally {
             currentThread.setContextClassLoader(oldClassLoader);
         }

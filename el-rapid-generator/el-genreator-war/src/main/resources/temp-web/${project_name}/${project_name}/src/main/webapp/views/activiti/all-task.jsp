@@ -48,6 +48,7 @@
 			var assigneeWF = row.task.assignee;
 			var taskId = row.task.id;
             var jumpUrl = row.task.formKey;
+            var taskType = row.taskType;
             if(jumpUrl || jumpUrl==null || jumpUrl.length==0){
                 jumpUrl='/pubserver/activiti/taskdo';
             }
@@ -55,7 +56,7 @@
 			if(assigneeWF==null || assigneeWF==""){
                 operHtml = "<a onclick=\"climeWF('${r"${ctx }"}/pubserver/activiti/task/claimWF/"+taskId+"')\" href=\"#\">签收</a>";
 			}else{
-                operHtml = "<a onclick=\"openTaskDo('"+jumpUrl+"','"+taskId+"')\" href=\"#\">办理</a>";
+                operHtml = "<a onclick=\"openTaskDo('"+jumpUrl+"','"+taskId+"','"+taskType+"')\" href=\"#\">办理</a>";
             }
 			return operHtml;
         }
@@ -73,8 +74,8 @@
 		}
 
 
-        function openTaskDo(jumpUrl,taskId){
-            var taskDourl="${r"${ctx }"}"+jumpUrl+"?taskId="+taskId;
+        function openTaskDo(jumpUrl,taskId,taskType){
+            var taskDourl="${r"${ctx }"}"+jumpUrl+"?taskId="+taskId+"&taskType="+taskType;
             parent.addUrlTab(taskDourl,taskId);
         }
 
@@ -90,6 +91,18 @@
             return dateUnixFormat(str.substring(0,10));
         }
 
+        function formatMes(val,row,index){
+            var taskType = row.taskType;
+            if(taskType && taskType=="AlermTask"){
+                return row.task.description;
+            }
+            if(val.message){
+                return val.message;
+            }else{
+//                return JSON.stringify(val);
+                return "";			}
+
+        }
 
 		$(function() {
 		    //初始化表格
@@ -104,7 +117,7 @@
 
 
 	<table id="dg" class="easyui-datagrid" title="所有待办任务列表" style="width:100%;height:auto;"
-		   data-options="pagination:true,rownumbers:true,singleSelect:true,url:'${r"${ctx }"}/pubserver/activiti/list/taskall/findall',method:'post'">
+		   data-options="pagination:true,fitColumns:true,nowrap:false,rownumbers:true,singleSelect:true,url:'${r"${ctx }"}/pubserver/activiti/list/taskall/findall',method:'post'">
 		<thead>
 		<tr>
 			<th data-options="field:'task.id',hidden:'true'">任务id</th>
@@ -114,7 +127,7 @@
 			<th data-options="field:'elProcessInstance.processDefinitionName',align:'right',width:100">流程名称</th>
 
 			<th data-options="field:'task.name',width:100">当前任务名称</th>
-			<th data-options="field:'_message',width:120">当前任务说明</th>
+			<th data-options="field:'elProcessInstance.variables',width:200,formatter:formatMes" >当前任务说明</th>
 			<th data-options="field:'elProcessInstance.id',hidden:'true'">流程实例id</th>
 
 			<th data-options="field:'task.createTime',align:'right',width:100,formatter:formatTime,width:100">创建时间</th>

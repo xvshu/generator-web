@@ -240,6 +240,14 @@
     </dependency>
     <!-- user login service end-->
 
+    <!--统一配置映射管理-->
+    <dependency>
+      <groupId>com.el.config</groupId>
+      <artifactId>el-config-api</artifactId>
+      <version>1.0-SNAPSHOT</version>
+    </dependency>
+
+
     <!-- message start -->
     <dependency>
       <groupId>com.eloancn.message</groupId>

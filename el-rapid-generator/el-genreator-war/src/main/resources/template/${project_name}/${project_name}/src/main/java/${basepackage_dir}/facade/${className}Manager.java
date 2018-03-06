@@ -44,11 +44,11 @@ public class ${className}Manager implements ${className}Service{
      * @return ResultDTO<Integer>
      */ 
 	@Validated
-	public ResultDTO<Integer> insert${className}(${className}Dto ${classNameLower}Dto){
+	public ResultDTO<Long> insert${className}(${className}Dto ${classNameLower}Dto){
 		if(logger.isDebugEnabled()){
 			logger.debug("${className}Manager.insert${className}(${className}Dto ${classNameLower}Dto) start-->", ${classNameLower}Dto);
 		}		
-		ResultDTO<Integer> result= new ResultDTO<Integer>();
+		ResultDTO<Long> result= new ResultDTO<Long>();
 		${className} ${classNameLower} = null;
 		try{
 			${classNameLower}=BeanMapper.map(${classNameLower}Dto,${className}.class);

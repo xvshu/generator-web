@@ -1,3 +1,4 @@
+
 <#include "/macro.include"/>
 <#include "/java_copyright.include">
 <#assign className = table.className>
@@ -5,12 +6,15 @@
 package ${basepackage}.web.pubserver;
 
 import com.alibaba.fastjson.JSON;
+import com.el.config.api.SystemActivitiService;
+import com.el.config.dto.SystemActivitiDto;
 import com.eloancn.framework.activiti.TaskResult;
 import com.eloancn.framework.activiti.model.ELProcessInstance;
 import com.eloancn.framework.activiti.model.ELTask;
 import com.eloancn.framework.activiti.model.Variable;
 import com.eloancn.framework.activiti.service.ElActivitiService;
 import com.eloancn.framework.activiti.util.Page;
+import com.eloancn.framework.activiti.util.TaskType;
 import com.eloancn.organ.common.BusCodeEnum;
 import org.apache.commons.collections.map.HashedMap;
 import org.slf4j.Logger;
@@ -23,6 +27,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import com.eloancn.framework.sevice.api.ResultDTO;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -30,6 +35,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.Date;
 <#include "/java_imports.include">
 
 /**
@@ -47,6 +53,9 @@ public class ActivitController {
 
     @Autowired
     private ElActivitiService elActiviti;
+
+    @Autowired
+    private SystemActivitiService systemActivitiService;
 
 
 
@@ -66,9 +75,10 @@ public class ActivitController {
      *
      */
     @RequestMapping(value = "/taskdo")
-    public ModelAndView taskDo(String taskId, HttpSession session, HttpServletRequest request) {
+    public ModelAndView taskDo(String taskId,String taskType, HttpSession session, HttpServletRequest request) {
         ModelAndView mav = new ModelAndView("/activiti/task-do");
         mav.addObject("taskId",taskId);
+        mav.addObject("taskType",taskType);
         return mav;
     }
 
@@ -80,7 +90,7 @@ public class ActivitController {
     @RequestMapping(value = "list/taskall/findall")
     @ResponseBody
     public Page<ActivitResult> taskAllPageFind(Integer page, Integer rows , HttpSession session, HttpServletRequest request) {
-        logger.info("=finished.finishedall=> page:{} rows:{}",page,rows);
+        logger.info("=ActivitController.findall=> page:{} rows:{}",page,rows);
         String userId = LoginController.getUserID(session);
         if(userId==null){
             return null;
@@ -99,11 +109,21 @@ public class ActivitController {
 
         //todo:BusCodeEnum.LI_CAI 修改为自己系统标识
         List<String> processDefinitionKeys = new ArrayList<String>();
-
         //本系统涉及的流程key集合
-        processDefinitionKeys.add("test-xvshu");
-        processDefinitionKeys.add("multiInstance-demo");
-        processDefinitionKeys.add("auto-user-test");
+        try{
+            SystemActivitiDto searchDto =new SystemActivitiDto();
+            searchDto.setSystemCode("${systemCode}");
+            ResultDTO<List<SystemActivitiDto>> listResultDTO = systemActivitiService.searchAndEques(searchDto);
+            for(SystemActivitiDto oneDto : listResultDTO.getData()){
+                processDefinitionKeys.add(oneDto.getActivitiKey());
+            }
+        }catch (Exception ex){
+            logger.error("taskAllPageFind =>",ex);
+        }
+
+        if(processDefinitionKeys==null || processDefinitionKeys.size()<=0){
+            return new Page<ActivitResult>() ;
+        }
 
         pageResult = elActiviti.findTodoTasks(processDefinitionKeys,userId,pageResult,BusCodeEnum.LI_CAI);
 
@@ -114,8 +134,16 @@ public class ActivitController {
             for(TaskResult taskResult:results){
                 ActivitResult activitResult = new ActivitResult();
                 ELProcessInstance elProcessInstance = ELProcessInstance.covert(taskResult.getProcessInstance());
+                if(taskResult.getTaskType().equals(TaskType.ActivitiTask) && elProcessInstance==null){
+                    elProcessInstance=new ELProcessInstance();
+                    elProcessInstance.setProcessDefinitionName(taskResult.getTask().getName());
+                }
+                if(taskResult.getTaskType().equals(TaskType.ActivitiTask)){
+                    elProcessInstance.setVariables(elActiviti.getVariables(taskResult.getProcessInstance().getProcessInstanceId()));
+                }
                 activitResult.setElProcessInstance(elProcessInstance);
                 activitResult.setTask(ELTask.convert(taskResult.getTask()));
+                activitResult.setTaskType(taskResult.getTaskType());
                 resultsfic.add(activitResult);
             }
         }
@@ -133,6 +161,7 @@ public class ActivitController {
     public class ActivitResult{
         private ELProcessInstance elProcessInstance;
         private ELTask task;
+        private TaskType taskType;
 
         public ELProcessInstance getElProcessInstance() {
             return elProcessInstance;
@@ -140,6 +169,13 @@ public class ActivitController {
 
         public void setElProcessInstance(ELProcessInstance elProcessInstance) {
             this.elProcessInstance = elProcessInstance;
+        }
+        public TaskType getTaskType() {
+            return taskType;
+        }
+
+        public void setTaskType(TaskType taskType) {
+            this.taskType = taskType;
         }
 
         public ELTask getTask() {
@@ -167,6 +203,7 @@ public class ActivitController {
         if(userId==null){
             return "获取用户信息错误，请联系管理员";
         }
+
         //todo:BusCodeEnum.LI_CAI 修改为自己系统标识
         elActiviti.claim(taskId, userId,BusCodeEnum.LI_CAI);
         return "任务已签收";
@@ -183,7 +220,7 @@ public class ActivitController {
      */
     @RequestMapping(value = "completeWf", method = {RequestMethod.POST, RequestMethod.GET})
     @ResponseBody
-    public String completeWF(String taskId, boolean isPass, Variable var, HttpSession session) {
+    public String completeWF(String taskId, boolean isPass,String taskType, Variable var, HttpSession session) {
         logger.info("=completeWF=> taskId:{} isPass:{}",taskId,isPass);
         try {
             Map<String, Object> variables = new HashedMap();
@@ -191,6 +228,10 @@ public class ActivitController {
             String userId = LoginController.getUserID(session);
             if(userId==null){
                 return "获取用户信息错误，请联系管理员";
+            }
+            if(taskType!=null && taskType.equals(TaskType.AlermTask.toString())){
+                elActiviti.msgComplete(userId,taskId,BusCodeEnum.LI_CAI);
+                return "办理成功！";
             }
 
             String nextUserId = (String)variables.get("nextUserId");

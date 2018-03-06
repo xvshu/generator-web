@@ -1,9 +1,9 @@
 /*
- * Powered By [crazy-framework]
- * Web Site: http://www.eloan.com
- * Since 2015 - 2017
+ * Powered By [eloancn-generator]
+ * Author:qinxf
+ * Since 2017 - 2018
  */
-
+ 
 package com.eloancn.architect.api;
 
 import javax.ws.rs.Consumes;
@@ -23,9 +23,9 @@ import java.util.Map;
 import java.util.Date;
 /**
  * <>
- * @author crazy
+ * @author qinxf
  * @version 1.0
- * @Time 2017-11-03 17:48:53
+ * @Time 2018-01-18 15:49:19
  */
 
 @Path("/companyService")
@@ -33,7 +33,6 @@ public interface CompanyService{
 	/**  
      *   
      * <save one>  
-     * @param company  
      * @return ResultDTO<Integer>
      */ 
 	@POST
@@ -43,8 +42,7 @@ public interface CompanyService{
 	 /**  
      *   
      * <update one>  
-     * @param company  
-     * @return ResultDTO<Integer>  
+     * @return ResultDTO<Integer>
      */ 
 	@PUT
 	@Produces({MediaType.APPLICATION_JSON})
@@ -53,20 +51,15 @@ public interface CompanyService{
 	 /**  
      *   
      * <find one by id>  
-     * @param id  
      * @return ResultDTO<CompanyDto>
      */ 
 	@GET
 	@Produces({MediaType.APPLICATION_JSON})
     @Consumes({MediaType.APPLICATION_JSON})
-	ResultDTO<CompanyDto> getCompanyById(Integer id);
+	ResultDTO<CompanyDto> getCompanyById(Long id);
 	 /**  
      *   
      * <query all>  
-     * @param page  
-     * @param limit  
-     * @param sort  
-     * @param dir  
      * @return ResultDTO<List<CompanyDto>>
      */ 
 	@GET

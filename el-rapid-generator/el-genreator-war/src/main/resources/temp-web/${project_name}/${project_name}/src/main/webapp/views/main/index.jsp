@@ -10,17 +10,148 @@
     <%@ include file="/common/head_script.jsp" %>
     <script type = "text/javascript" src = "${r"${fPath }"}/statics/js/index.js?v=${r"${fVersion}"}"></script>
     <script type = "text/javascript" src = "${r"${fPath }"}/statics/js/nano.js?v=${r"${fVersion}"}"></script>
+    <link rel="stylesheet" type="text/css" href="${r"${fPath }"}/statics/css/treeNode.css?v=${r"${fVersion}"}"/>
 
     <script type="text/javascript" >
         function addUrlTab(url,title){
-            var content = '<iframe scrolling="yes" frameborder="0"  src="'+url+'" style="width:100%;height: 98%;"></iframe>';
-            $('#tabs').tabs('add',{
+            if ($('#tabs').tabs('exists', title)){
+                $('#tabs').tabs('select', title);
+            } else {
+                var content = '<iframe scrolling="yes" frameborder="0"  src="'+url+'" style="width:100%;height: 98%;"></iframe>';
+                $('#tabs').tabs('add',{
+                    title:title,
+                    content:content,
+                    cache:false,
+                    closable:true
+                });
+            }
+
+        }
+
+        function addPanel(title,content){
+            $('#menu_aa').accordion('add',{
                 title:title,
-                content:content,
-                cache:false,
-                closable:true
+                content:content
             });
         }
+
+        /**
+         * 加载树形结构数据
+         */
+        function loadMenuTreeNodeData(url){
+
+            $.ajax({
+                url:url
+            }).done(function (data){
+                var tree_munu=[];
+                if (data.data){
+                    tree_munu = myLoadFilter_tree(data.data,'closed');
+                }else{
+                    tree_munu =myLoadFilter_tree(data,'closed');
+                }
+
+                for(var i=0; i<tree_munu.length; i++){
+                    var menu_one = tree_munu[i];
+                    var menu_children = menu_one.children;
+                    for(var c=0; c<menu_children.length; c++){
+                        var menu_one_n = menu_children[c];
+                        var menu_children_n = menu_one_n.children;
+                        addPanel(menu_one_n.text,"<ul id='easyui_tree_menu_"+menu_one_n.id+"' ></ul>");
+                    }
+
+                }
+
+                for(var i=0; i<tree_munu.length; i++){
+                    var menu_one = tree_munu[i];
+                    var menu_children = menu_one.children;
+                    for(var c=0; c<menu_children.length; c++){
+                        var menu_one_n = menu_children[c];
+                        var menu_children_n = menu_one_n.children;
+                        loadTreeInId("easyui_tree_menu_"+menu_one_n.id,menu_children_n);
+                    }
+
+                }
+
+            });
+
+        }
+
+        function loadTreeInId(id,treeData){
+            $("#"+id).tree({
+                data:treeData,
+                onClick: function(node){
+                    if(node.url && node.url.length >0){
+//                        alert(node.url);
+                        addUrlTab('${r"${ctx }"}'+node.url,node.text);
+                    }
+
+                }
+            });
+
+        }
+
+
+        /**
+         * 解析树形结构数据
+         * @param data
+         * @returns {Array}
+         */
+        function myLoadFilter_tree(data,treeNodeState){
+
+            function disTreeNode(node){
+                if (node==null){
+                    return null;
+                }
+
+                var node_msg = {id:node.id,text:node.name,attributes:{code:node.code},url:node.url};
+
+                if (node.childNodes == null || node.childNodes == ''){
+                    return node_msg;
+                }
+                var childNodes = node.childNodes;
+                for(var i=0; i<childNodes.length; i++){
+                    var childNode = childNodes[i];
+                    var childNode_ex = disTreeNode(childNode);
+                    if (childNode_ex != null){
+                        if (node_msg.children){
+                            node_msg.children.push(childNode_ex);
+                        } else {
+                            node_msg.children = [childNode_ex];
+                        }
+                    }
+                }
+                if (treeNodeState){
+                    node_msg.state = treeNodeState;
+                }
+                return node_msg;
+            }
+
+            var nodes = [];
+            if (data){
+                // get the root nodes
+                for(var i=0; i<data.length; i++){
+                    var node = data[i];
+                    var nodeMsg = disTreeNode(node);
+                    nodes.push(nodeMsg);
+                }
+            }
+            return nodes;
+        }
+
+        /**
+         * 格式化节点信息
+         * @param node
+         * @returns {*}
+         */
+        function format_node(node){
+            var s = node.text;
+            if (node.children){
+                s += '&nbsp;<span style=\'color:blue\'>(' + node.children.length + ')</span>';
+            }
+            return s;
+        }
+
+
     </script>
 
 </head>
@@ -44,37 +175,7 @@
         </div>
     </div>
     <div data-options="region:'west',split:true,title:'菜单'" style="width: 200px">
-        <div class="easyui-accordion" data-options="fit:false,border:false,selected:-1" style="padding: 0px !important;">
-            <div title="示例" class="icon_lists" style="padding: 10px;">
-
-                <#list  tables?split(",") as oneTname>
-                    <div class="index-nav-item">
-                        <a href="javascript:void(0);" src="${r"${ctx}"}/${oneTname}/index"  class="index--navi-tab">
-                            <span><i  class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-transDetail'"></i><ttitle>${oneTname}</ttitle></span>
-                        </a>
-                    </div>
-                </#list>
-
-            </div>
-
-            <div title="消息管理" class="icon_lists" style="padding: 10px;">
-                <div class="index-nav-item">
-                    <a href="javascript:void(0);" src="${r"${ctx}"}/pubserver/message/view/loadAll"  class="index--navi-tab">
-                        <span><i class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-tip'"></i><ttitle>站内信列表</ttitle></span>
-                    </a>
-                </div>
-                <div class="index-nav-item">
-                    <a href="javascript:void(0);" src="${r"${ctx}"}/pubserver/message/view/loadAllNotice"  class="index--navi-tab">
-                        <span><i class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-tip'"></i><ttitle>公告列表</ttitle></span>
-                    </a>
-                </div>
-                <div class="index-nav-item">
-                    <a href="javascript:void(0);" src="${r"${ctx}"}/pubserver/message/view/sendMessageListJsp"  class="index--navi-tab">
-                        <span><i class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-tip'"></i><ttitle>发送记录</ttitle></span>
-                    </a>
-                </div>
-            </div>
-
+        <div id="menu_aa" class="easyui-accordion" data-options="fit:false,border:false,selected:-1" style="padding: 0px !important;">
 
         </div>
     </div>
@@ -86,6 +187,10 @@
 	    </div>
     </div>
 </body>
+
+<script>
+    loadMenuTreeNodeData('/pubserver/loadMenu');
+</script>
 
 </html>
 

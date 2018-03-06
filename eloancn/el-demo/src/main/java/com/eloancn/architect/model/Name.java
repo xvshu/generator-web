@@ -1,9 +1,9 @@
 /*
- * Powered By [crazy-framework]
- * Web Site: http://www.eloan.com
- * Since 2015 - 2017
+ * Powered By [eloancn-generator]
+ * Author:qinxf
+ * Since 2017 - 2018
  */
-
+ 
 package com.eloancn.architect.model;
 
 import javax.validation.constraints.*;
@@ -18,9 +18,9 @@ import java.util.Map;
 import java.util.Date;
 /**
  * <>
- * @author crazy
+ * @author qinxf
  * @version 1.0
- * @Time 2017-11-03 17:48:52
+ * @Time 2018-01-18 15:49:21
  */
 
 public class Name implements java.io.Serializable{
@@ -29,13 +29,18 @@ public class Name implements java.io.Serializable{
 	/**  
      * 主键  
      */ 
-	//@Max(9999999999L)
+	//
 	private Integer id;
 	/**  
      * 姓名  
      */ 
 	//@Length(max=255)
 	private String name;
+	/**  
+     *   
+     */ 
+	//
+	private Double sex;
 	/**  
      * 创建时间  
      */ 
@@ -51,7 +56,7 @@ public class Name implements java.io.Serializable{
 	}
 
 	public Name(
-		java.lang.Integer id
+		Integer id
 	){
 		this.id = id;
 	}
@@ -69,6 +74,13 @@ public class Name implements java.io.Serializable{
 	
 	public String getName() {
 		return this.name;
+	}
+	public void setSex(Double value) {
+		this.sex = value;
+	}
+	
+	public Double getSex() {
+		return this.sex;
 	}
 	public void setCreateDate(Date value) {
 		this.createDate = value;
@@ -89,6 +101,7 @@ public class Name implements java.io.Serializable{
 		return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
 			.append("Id",getId())
 			.append("Name",getName())
+			.append("Sex",getSex())
 			.append("CreateDate",getCreateDate())
 			.append("UpdateDate",getUpdateDate())
 			.toString();

@@ -8,7 +8,7 @@
 	   xmlns="http://www.springframework.org/schema/beans">
 
 	<!-- 提供方应用信息 -->
-	<dubbo:application name="el_demo" owner="el_demo" organization="dubbox"/>
+	<dubbo:application name="${project_name}" owner="${project_name}" organization="dubbox"/>
 	<!-- dubbo接口去除注册中心，采用直连的方式 -->
 	<!-- <dubbo:registry address="N/A" ></dubbo:registry> -->
 	<!-- 使用zookeeper注册中心暴露服务地址 -->
@@ -22,12 +22,21 @@
 	<dubbo:reference interface="com.eloancn.framework.activiti.service.ElActivitiService" id="elActiviti" group="el-activiti-soa" version="1.1.0"
 					 timeout="60000" protocol="dubbo" registry="elZookeeper" lazy="true" check="false" retries="0" />
 
+	<!-- 系统 - 工作流映射服务 -->
+	<dubbo:reference interface="com.el.config.api.SystemActivitiService" id="systemActivitiManager" group="el-config-soa" version="1.1.0"
+					 timeout="60000" protocol="dubbo" registry="elZookeeper" lazy="true" check="false" retries="0" />
+
 	<!-- 组织机构用户服务 -->
 	<dubbo:reference interface="com.eloancn.organ.api.UserService" id="userOrganService" group="organ-soa" version="1.0.0"
 					 timeout="60000" protocol="dubbo" registry="elZookeeper" lazy="true" check="false" retries="0" />
 	<!-- 组织机构部门服务 -->
 	<dubbo:reference interface="com.eloancn.organ.api.DepartmentService" id="departmentOrganService" group="organ-soa" version="1.0.0"
 					 timeout="60000" protocol="dubbo" registry="elZookeeper" lazy="true" check="false" retries="0" />
+	<!-- 权限管理服务 -->
+	<dubbo:reference interface="com.eloancn.organ.api.RightService" id="rightService" group="organ-soa" version="1.0.0"
+					 timeout="60000" protocol="dubbo" registry="elZookeeper" lazy="true" check="false" retries="0" />
+
+
 
 	<!-- 消息服务 -->
 	<dubbo:reference interface="com.eloancn.message.api.MessageRecService" id="messageRecService" group="${r"${message-group}"}" version="${r"${message-version}"}"

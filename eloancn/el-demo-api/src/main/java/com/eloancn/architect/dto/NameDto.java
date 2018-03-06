@@ -1,9 +1,9 @@
 /*
- * Powered By [crazy-framework]
- * Web Site: http://www.eloan.com
- * Since 2015 - 2017
+ * Powered By [eloancn-generator]
+ * Author:qinxf
+ * Since 2017 - 2018
  */
-
+ 
 package com.eloancn.architect.dto;
 
 import javax.validation.constraints.*;
@@ -16,9 +16,9 @@ import java.util.Map;
 import java.util.Date;
 /**
  * <>
- * @author crazy
+ * @author qinxf
  * @version 1.0
- * @Time 2017-11-03 17:48:52
+ * @Time 2018-01-18 15:49:21
  */
 
 public class NameDto implements java.io.Serializable{
@@ -27,7 +27,7 @@ public class NameDto implements java.io.Serializable{
 	/**  
      * 主键  
      */ 
-	@Max(9999999999L)
+	
 	private Integer id;
 	/**  
      * 姓名  
@@ -35,15 +35,20 @@ public class NameDto implements java.io.Serializable{
 	@Length(max=255)
 	private String name;
 	/**  
+     *   
+     */ 
+	
+	private Double sex;
+	/**  
      * 创建时间  
      */ 
 	
-	private Date createDate;
+	private java.util.Date createDate;
 	/**  
      * 更新时间  
      */ 
 	
-	private Date updateDate;
+	private java.util.Date updateDate;
 
 
 	public void setId(Integer value) {
@@ -60,18 +65,25 @@ public class NameDto implements java.io.Serializable{
 	public String getName() {
 		return this.name;
 	}
-	public void setCreateDate(Date value) {
+	public void setSex(Double value) {
+		this.sex = value;
+	}
+	
+	public Double getSex() {
+		return this.sex;
+	}
+	public void setCreateDate(java.util.Date value) {
 		this.createDate = value;
 	}
 	
-	public Date getCreateDate() {
+	public java.util.Date getCreateDate() {
 		return this.createDate;
 	}
-	public void setUpdateDate(Date value) {
+	public void setUpdateDate(java.util.Date value) {
 		this.updateDate = value;
 	}
 	
-	public Date getUpdateDate() {
+	public java.util.Date getUpdateDate() {
 		return this.updateDate;
 	}
 	@Override

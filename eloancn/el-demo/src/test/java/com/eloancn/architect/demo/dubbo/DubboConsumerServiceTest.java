@@ -24,7 +24,7 @@ public class DubboConsumerServiceTest extends SpringBaseTest {
     @org.junit.Test
     public void testDubboService() throws Exception {
         LOGGER.info("=DubboConsumerServiceTest.testLoginController=>start at time[{}]", System.currentTimeMillis());
-        ResultDTO<NameDto> result = dubboConsumerService.getNameById(1);
+        ResultDTO<NameDto> result = dubboConsumerService.getNameById(1L);
         Assert.isTrue(result != null);
         Assert.isTrue(result.getData() != null);
         Assert.isTrue(result.getData().getId() == 1);

@@ -37,9 +37,11 @@
 		}
 
 		var taskId=${r"${taskId}"};
+        var taskType="${r"${taskType}"}";
 
         $(function() {
             $("#taskId").textbox("setValue",taskId);
+            $("#taskType").val(taskType);
         });
 
 	</script>
@@ -62,7 +64,7 @@
 					</tr>
 				</table>
 				<input type=text style="display:none" id="isPass" name="isPass">
-
+				<input type=text style="display:none" id="taskType" name="taskType">
 			</div>
 		</form>
 	</div>

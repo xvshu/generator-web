@@ -33,7 +33,7 @@ public class DtoConvertServiceTest extends SpringBaseTest {
     @org.junit.Test
     public void testConvertDto() throws Exception {
         LOGGER.info("=DtoConvertServiceTest.testConvertDto=>start at time[{}]", System.currentTimeMillis());
-        Name name = nameDao.get(1);
+        Name name = nameDao.get(1L);
         NameDto dto = dtoConvert.convert(name);
         Assert.isTrue(dto != null);
         Assert.isTrue(dto.getId() == 1);
